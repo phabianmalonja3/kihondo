@@ -1,116 +1,125 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { FaCalendarCheck } from "react-icons/fa";
+import { useState } from "react";
 
-// 1. Define the Interface based on your Laravel API response
-interface Booking {
-  id: number;
-  user_name: string; // Changed from 'customer' to match your previous booking form
-  destination_name: string;
+interface BookingForm {
   date_from: string;
-  status: "confirmed" | "pending" | "cancelled";
+  date_to: string;
+  adults: number;
+  children: number;
+  youth: number;
 }
 
-const statusColors: Record<Booking["status"], string> = {
-  confirmed: "bg-green-100 text-green-700",
-  pending: "bg-yellow-100 text-yellow-700",
-  cancelled: "bg-red-100 text-red-700",
-};
+export default function BookingFormComponent() {
+  const [form, setForm] = useState<BookingForm>({
+    date_from: "",
+    date_to: "",
+    adults: 1,
+    children: 0,
+    youth: 0,
+  });
 
-export default function BookingsPage() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    async function fetchBookings() {
-      try {
-        // Replace with your actual Server IP
-        const res = await fetch("http://190.179.245.188:8000/api/bookings");
-        const data = await res.json();
-        
-        // Handle Laravel's common data nesting
-        setBookings(data.bookings?.data ?? data.bookings ?? []);
-      } catch (error) {
-        console.error("Failed to load bookings:", error);
-      } finally {
-        setLoading(false);
-      }
+  // Compute total people dynamically
+  const totalPeople = form.adults + form.children + form.youth;
+
+  const handleChange = (field: keyof BookingForm, value: string | number) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const bookingData = {
+      ...form,
+      people: totalPeople, // send total people to API
+    };
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!res.ok) throw new Error("Booking failed");
+
+      setMessage("Booking successful!");
+      // Reset form
+      setForm({
+        date_from: "",
+        date_to: "",
+        adults: 1,
+        children: 0,
+        youth: 0,
+      });
+    } catch (err) {
+      setMessage("Booking failed. Please try again.");
+      console.error(err);
     }
-    fetchBookings();
-  }, []);
-
-  if (loading) {
-    return <div className="p-20 text-center animate-pulse text-emerald-900">Loading your bookings...</div>;
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <FaCalendarCheck className="text-emerald-700 text-3xl" />
-        <h1 className="text-3xl font-bold text-emerald-900">Bookings Management</h1>
-      </div>
-
-      {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <StatCard title="Total Bookings" value={bookings.length} />
-        <StatCard 
-          title="Confirmed" 
-          value={bookings.filter(b => b.status === "confirmed").length} 
-        />
-        <StatCard 
-          title="Pending" 
-          value={bookings.filter(b => b.status === "pending").length} 
+    <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-white rounded-lg shadow">
+      <div>
+        <label>Date From:</label>
+        <input
+          type="date"
+          value={form.date_from}
+          onChange={(e) => handleChange("date_from", e.target.value)}
+          className="border rounded p-2 w-full"
         />
       </div>
-
-      {/* Table Section */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-emerald-900 text-white">
-              <tr>
-                <th className="px-6 py-4">Customer</th>
-                <th className="px-6 py-4">Destination</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {bookings.length > 0 ? (
-                bookings.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 font-medium">{booking.user_name}</td>
-                    <td className="px-6 py-4">{booking.destination_name}</td>
-                    <td className="px-6 py-4 text-gray-600">{booking.date_from}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusColors[booking.status]}`}>
-                        {booking.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="px-6 py-10 text-center text-gray-400">
-                    No bookings found in the database.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      <div>
+        <label>Date To:</label>
+        <input
+          type="date"
+          value={form.date_to}
+          onChange={(e) => handleChange("date_to", e.target.value)}
+          className="border rounded p-2 w-full"
+        />
+      </div>
+      <div className="flex gap-4">
+        <div>
+          <label>Adults:</label>
+          <input
+            type="number"
+            min={0}
+            value={form.adults}
+            onChange={(e) => handleChange("adults", Number(e.target.value))}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+        <div>
+          <label>Children:</label>
+          <input
+            type="number"
+            min={0}
+            value={form.children}
+            onChange={(e) => handleChange("children", Number(e.target.value))}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+        <div>
+          <label>Youth:</label>
+          <input
+            type="number"
+            min={0}
+            value={form.youth}
+            onChange={(e) => handleChange("youth", Number(e.target.value))}
+            className="border rounded p-2 w-full"
+          />
         </div>
       </div>
-    </div>
-  );
-}
-
-function StatCard({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <p className="text-gray-500 text-sm font-medium">{title}</p>
-      <h2 className="text-3xl font-bold text-emerald-900 mt-2">{value}</h2>
-    </div>
+      <p>Total People: {totalPeople}</p>
+      <button type="submit" className="bg-emerald-700 text-white px-6 py-2 rounded">
+        Book Now
+      </button>
+      {message && <p className="mt-2 text-red-500">{message}</p>}
+    </form>
   );
 }
