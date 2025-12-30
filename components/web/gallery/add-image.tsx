@@ -31,12 +31,14 @@ interface Category {
 interface AddImageProps {
   onImageAdded: () => void;
 }
+
 export function AddImage({ onImageAdded }: AddImageProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
@@ -61,10 +63,13 @@ export function AddImage({ onImageAdded }: AddImageProps) {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/galleries`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!res.ok) throw new Error("Upload failed");
 
@@ -74,7 +79,9 @@ export function AddImage({ onImageAdded }: AddImageProps) {
       setCategoryId("");
       setImage(null);
       setDescription("");
-        onImageAdded(); // Notify parent to refresh gallery
+
+      onImageAdded(); // refresh gallery
+      setOpen(false); // ✅ CLOSE dialog
     } catch (error) {
       toast.error("Failed to upload image");
     } finally {
@@ -83,9 +90,12 @@ export function AddImage({ onImageAdded }: AddImageProps) {
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="flex items-center gap-2 bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-emerald-800">
+        <Button
+          onClick={() => setOpen(true)}
+          className="flex items-center gap-2 bg-emerald-900 text-white hover:bg-emerald-800"
+        >
           <FaPlus />
           Add Image
         </Button>
@@ -102,7 +112,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
 
           {/* Category */}
           <Select value={categoryId} onValueChange={setCategoryId}>
-            <SelectTrigger className="w-full border rounded-md p-2 text-sm mb-2">
+            <SelectTrigger className="w-full mb-2">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
@@ -119,7 +129,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files?.[0] || null)}
-            className="w-full border rounded-md p-2 text-sm mb-2"
+            className="mb-2"
           />
 
           {/* Description */}
@@ -127,7 +137,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter image description..."
-            className="w-full border rounded-md p-2 text-sm resize-none"
+            className="w-full border rounded-md p-2 text-sm resize-none mb-2"
             rows={3}
           />
 
@@ -136,13 +146,13 @@ export function AddImage({ onImageAdded }: AddImageProps) {
               Cancel
             </AlertDialogCancel>
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+              className="bg-emerald-700 hover:bg-emerald-600 text-white"
             >
               {loading ? "Saving..." : "Save"}
-            </button>
+            </Button>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>

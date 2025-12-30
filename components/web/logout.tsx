@@ -14,13 +14,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FaSignOutAlt } from "react-icons/fa";
+import { toast } from "sonner";
 
 export function LogoutDialog() {
   const router = useRouter();
 
   const handleLogout = () => {
 
-    
+    toast.success("Logged out successfully");
+    localStorage.removeItem("access_token");
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
    
     router.push("/login"); // Redirect to login page after logout
   };

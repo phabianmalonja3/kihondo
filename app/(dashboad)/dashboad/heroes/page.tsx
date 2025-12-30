@@ -19,7 +19,9 @@ export default function HeroesPage() {
   
       const data = await res.json();
      
-      console.log(data)
+      setHeroes(data.heroes.data ?? data)
+
+
     };
   
     fetchImages();
