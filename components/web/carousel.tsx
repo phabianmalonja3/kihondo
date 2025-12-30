@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import {useRef,useEffect,useState} from "react"
 import Autoplay from "embla-carousel-autoplay";
 import imag from '@/public/images/img.jpg';
 import imag1 from '@/public/images/img1.jpg';
@@ -17,6 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Hero } from "@/lib/heros";
 
 export function CarouselPlugin() {
   const slides = [
@@ -47,10 +48,36 @@ export function CarouselPlugin() {
     },
   ];
 
-  const autoplay = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: false })
+  const [heroes,setHeroes]= useState<Hero[] | null>(null);
+
+  const autoplay = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
+
+   
+  
+     useEffect(() => {
+       const fetchImages = async () => {
+        const res = await fetch("http://localhost:8000/api/heroes", {
+          cache: "no-store", // 
+        });
+    
+        const data = await res.json();
+       
+        console.log(data.heroes.data ?? data)
+
+        setHeroes(data.heroes.data ?? data)
+    
+    
+      };
+    
+      fetchImages();
+      
+     }, []);
+
+     
+  
   return (
     <section className="relative h-screen w-full">
       <Carousel
@@ -60,12 +87,12 @@ export function CarouselPlugin() {
         className="h-full"
       >
         <CarouselContent className="h-full">
-          {slides.map((slide, index) => (
+          {heroes?.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               {/* Background image */}
               <div
                 className="h-screen bg-cover bg-center"
-                style={{ backgroundImage: `url(${slide.image.src})` }}
+                style={{ backgroundImage: `url(${slide.image_url})` }}
               >
                 {/* Overlay */}
                 <div className="h-full bg-black/50 flex items-center justify-center text-center px-6">

@@ -5,3 +5,9 @@ export interface ImageItem {
   description:string
 }
 
+interface Hero {
+  title: string;
+  subtitle: string;
+  image: string;
+}
+

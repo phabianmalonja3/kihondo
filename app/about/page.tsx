@@ -1,6 +1,7 @@
 import TestimonialsSection from "@/components/web/teststmonial";
 import { Metadata } from "next";
 import Image from "next/image";
+import Bg from "@/public/images/team.jpg";
 
 
 export const metadata:Metadata={
@@ -48,7 +49,7 @@ export default function AboutPage() {
 
           <div className="relative h-80 rounded-lg overflow-hidden">
             <Image
-              src="/images/about.jpg"
+              src={Bg.src}
               alt="Our Team"
               fill
               className="object-cover"

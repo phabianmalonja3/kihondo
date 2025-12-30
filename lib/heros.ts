@@ -1,8 +1,8 @@
 // types/hero.ts
 export interface Hero {
-  id: number
+  id: string
   title: string
   subtitle: string
-  image: string
+  image_url: string
   active: boolean
 }

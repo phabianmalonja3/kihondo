@@ -1,13 +1,15 @@
 "use client";
 
 import { AddDestination } from "@/components/web/destinations/add-destination";
+import { DeleteDestination } from "@/components/web/destinations/delete";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, Suspense } from "react";
 import { FaPlus, FaEdit, FaTrash, FaEyeSlash, FaEye } from "react-icons/fa";
+import Loading from './loading';
 
 interface Destination {
-  id: number;
+  id: string;
   name: string;
   location: string;
   image_url: string;
@@ -28,8 +30,7 @@ export default function DestinationsPage() {
       });
   
       const data = await res.json();
-     
-      console.log(data.destinations.data)
+    
       setDestinations(data.destinations.data ?? data);
   
     };
@@ -62,7 +63,8 @@ export default function DestinationsPage() {
           </thead>
 
           <tbody>
-            {destinations.map((dest) => (
+            <Suspense  fallback={<Loading />}>
+{destinations.map((dest) => (
               <tr key={dest.id} className="border-b last:border-none">
                 <td className="px-6 py-4">
                   <Image
@@ -92,7 +94,7 @@ export default function DestinationsPage() {
                           : "bg-gray-200 text-gray-700"
                       }`}
                   >
-                    {dest.status}
+                    {dest.status ? "Active" : "Inactive"}
                   </span>
                 </td>
 
@@ -104,13 +106,15 @@ export default function DestinationsPage() {
                     <button className="text-blue-600 hover:text-blue-800">
                       <FaEdit />
                     </button>
-                    <button className="text-red-600 hover:text-red-800">
-                      <FaTrash />
-                    </button>
+                    
+
+                     <DeleteDestination destination={dest.id} onDelete={() => setRefresh(prev => !prev)} />
                   </div>
                 </td>
               </tr>
             ))}
+            </Suspense>
+            
           </tbody>
         </table>
       </div>

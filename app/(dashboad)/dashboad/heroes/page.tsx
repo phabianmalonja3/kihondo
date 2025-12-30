@@ -2,34 +2,33 @@
 
 import Image from "next/image"
 import { Hero } from "@/lib/heros"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HeroDialog } from "@/components/web/hero";
-
-const heroes: Hero[] = [
-  {
-    id: 1,
-    title: "Discover Tanzania",
-    subtitle: "Wildlife, Beaches & Culture",
-    image: "/images/serengeti.jpg",
-    active: true,
-  },
-  {
-    id: 2,
-    title: "Explore Zanzibar",
-    subtitle: "White sand beaches & blue ocean",
-    image: "/images/zanzibar.jpg",
-    active: false,
-  },
-]
+import { DeleteHeroes } from "./delete";
 
 export default function HeroesPage() {
 
    const [heroes, setHeroes] = useState<Hero[]>([]);
+   const [refresh, setRefresh] = useState<Boolean >(false);
 
-  const handleSaveHero = (hero: Hero) => {
-    setHeroes([...heroes, hero]);
-    console.log("New Hero Added:", hero);
-  };
+   useEffect(() => {
+     const fetchImages = async () => {
+      const res = await fetch("http://localhost:8000/api/heroes", {
+        cache: "no-store", // 
+      });
+  
+      const data = await res.json();
+     
+      console.log(data)
+      setHeroes(data.heroes.data ?? data);
+  
+    };
+  
+    fetchImages();
+    
+   }, [refresh]);
+
+
   return (
     <div className="p-6">
       {/* Header */}
@@ -37,7 +36,7 @@ export default function HeroesPage() {
         <h1 className="text-2xl font-bold">Heroes</h1>
    
 
-        <HeroDialog onSave={handleSaveHero} />
+        <HeroDialog onSave={()=>setRefresh(prev => !prev)} />
       </div>
 
       {/* Table */}
@@ -58,10 +57,11 @@ export default function HeroesPage() {
               <tr key={hero.id} className="border-t">
                 <td className="p-4">
                   <Image
-                    src={hero.image}
+                    src={hero.image_url}
                     alt={hero.title}
                     width={120}
                     height={60}
+                    unoptimized
                     className="rounded-md object-cover"
                   />
                 </td>
@@ -85,9 +85,7 @@ export default function HeroesPage() {
                   <button className="text-blue-600 hover:underline">
                     Edit
                   </button>
-                  <button className="text-red-600 hover:underline">
-                    Delete
-                  </button>
+                  <DeleteHeroes hero={hero.id} onDelete={()=>setRefresh(prev=>!prev)} />
                 </td>
               </tr>
             ))}

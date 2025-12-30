@@ -14,24 +14,56 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import loading from '../../app/(dashboad)/dashboad/destinations/loading';
 
-interface Hero {
-  title: string;
-  subtitle: string;
-  image: string;
-}
 
-export function HeroDialog({ onSave }: { onSave: (hero: Hero) => void }) {
+export function HeroDialog({ onSave }: { onSave: () => void }) {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ title, subtitle, image });
-    setTitle("");
-    setSubtitle("");
-    setImage("");
+
+    if (!image || !location || !setSubtitle) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("subtitle", subtitle);
+    formData.append("title", title);
+ 
+
+    try {
+      setLoading(true);
+
+      const res = await fetch("http://localhost:8000/api/heroes", {
+        method: "POST",
+        body: formData,
+      });
+
+      
+      console.log(res.body)
+
+      if (!res.ok) throw new Error("Upload failed" );
+
+      onSave()
+      toast.success("Image uploaded successfully");
+
+
+      setImage(null);
+   setTitle("")
+   setSubtitle("")
+        // onAddDestination(); // Notify parent to refresh gallery
+    } catch (error) {
+      toast.error("Failed to upload image " +error );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,21 +104,19 @@ export function HeroDialog({ onSave }: { onSave: (hero: Hero) => void }) {
 
           <div className="grid gap-3">
             <Label htmlFor="hero-image">Image URL</Label>
-            <Input
-              id="hero-image"
-              name="image"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="Enter image URL"
-              required
-            />
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files?.[0] || null)}
+            className="w-full border rounded-md p-2 text-sm mb-2"
+          />
           </div>
 
           <DialogFooter className="mt-4">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save Hero</Button>
+            <Button type="submit" className="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"> Save Hero</Button>
           </DialogFooter>
         </form>
       </DialogContent>
