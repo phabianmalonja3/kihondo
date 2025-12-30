@@ -13,7 +13,7 @@ export  default  function ClientLogin() {
     const [isLoading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
 const router = useRouter()
-    const handleSubmit = (e: FormEvent<HTMLElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
        
 
         e.preventDefault()
