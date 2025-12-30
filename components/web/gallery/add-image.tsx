@@ -39,7 +39,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/categories")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data.categories ?? data))
       .catch(() => toast.error("Failed to load categories"));
