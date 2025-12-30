@@ -2,7 +2,6 @@
 import { Metadata } from 'next'
 
 import ClientLogin from "./client-login"
-import async from './client-login';
 
 
 export const metadata:Metadata={

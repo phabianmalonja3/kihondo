@@ -41,7 +41,7 @@ export function HeroDialog({ onSave }: { onSave: () => void }) {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8000/api/heroes", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/heroes`, {
         method: "POST",
         body: formData,
       });
