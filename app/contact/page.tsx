@@ -1,5 +1,5 @@
 
-
+"use client";
 import ContactClient from "./contact-client";
 import { Metadata } from 'next';
 
