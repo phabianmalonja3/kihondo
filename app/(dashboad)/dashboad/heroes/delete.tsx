@@ -29,7 +29,7 @@ export function DeleteHeroes( {hero, onDelete}: Props) {
     const handleDelete = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8000/api/heroes/${hero}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/heroes/${hero}`, {
           method: "DELETE",
         });                 
 

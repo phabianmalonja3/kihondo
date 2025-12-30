@@ -49,7 +49,7 @@ export function AddDestination({onAddDestination}: Props) {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8000/api/destinations", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
         method: "POST",
         body: formData,
       });

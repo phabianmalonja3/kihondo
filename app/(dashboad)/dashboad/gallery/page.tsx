@@ -15,7 +15,7 @@ const [refresh, setRefresh] = useState(false); // toggles to refresh gallery
   useEffect(() => {
    
     const fetchImages = async () => {
-    const res = await fetch("http://localhost:8000/api/galleries", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
       cache: "no-store", // 
     });
 

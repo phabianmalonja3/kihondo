@@ -24,7 +24,7 @@ export function DeleteGallery( {gallery, onDelete}: {gallery: string, onDelete?:
     const handleDelete = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8000/api/galleries/${gallery}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries/${gallery}`, {
           method: "DELETE",
         });                 
 

@@ -21,7 +21,7 @@ export default function Home() {
         
        <Explore />
 
-      <Destination destinations={destinations} />
+      <Destination  />
 
        <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">

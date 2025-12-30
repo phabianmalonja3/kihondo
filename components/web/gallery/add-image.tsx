@@ -61,7 +61,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:8000/api/galleries", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
         method: "POST",
         body: formData,
       });

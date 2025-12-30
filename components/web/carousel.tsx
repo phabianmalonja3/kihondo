@@ -59,7 +59,7 @@ export function CarouselPlugin() {
   
      useEffect(() => {
        const fetchImages = async () => {
-        const res = await fetch("http://localhost:8000/api/heroes", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/heroes`, {
           cache: "no-store", // 
         });
     

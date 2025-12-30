@@ -26,7 +26,7 @@ export default function GalleryPage() {
  useEffect(() => {
     // Fetch gallery items from API if needed
     const fetchImages = async () => {
-    const res = await fetch("http://localhost:8000/api/galleries", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
       cache: "no-store", // 
     });
 

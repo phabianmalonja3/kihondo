@@ -25,7 +25,7 @@ const router = useRouter()
         signInSchema.safeParse({email,password})
         
 
-    fetch('http://localhost:8000/api/auth/login', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
             method: 'POST',
         
             headers: {

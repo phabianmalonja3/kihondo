@@ -29,7 +29,7 @@ export function DeleteDestination( {destination, onDelete}: Props) {
     const handleDelete = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8000/api/destinations/${destination}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations/${destination}`, {
           method: "DELETE",
         });                 
 
