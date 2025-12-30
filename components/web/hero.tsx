@@ -15,7 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import loading from '../../app/(dashboad)/dashboad/destinations/loading';
 
 
 export function HeroDialog({ onSave }: { onSave: () => void }) {
@@ -58,7 +57,7 @@ export function HeroDialog({ onSave }: { onSave: () => void }) {
       setImage(null);
    setTitle("")
    setSubtitle("")
-        // onAddDestination(); // Notify parent to refresh gallery
+       
     } catch (error) {
       toast.error("Failed to upload image " +error );
     } finally {
