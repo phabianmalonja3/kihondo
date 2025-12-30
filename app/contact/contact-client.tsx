@@ -7,7 +7,7 @@ import banner from "@/public/contact.jpg";
 import { FaFacebookF, FaInstagram, FaPhone, FaTwitter } from "react-icons/fa";
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+// import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapLoader } from './maploader';
 import { Metadata } from 'next';
@@ -19,11 +19,11 @@ export const metadata:Metadata={
   }
 // Fix default marker icon issue in Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+//   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+//   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+// });
 
 const ContactClient = () => {
 
@@ -138,7 +138,7 @@ const ContactClient = () => {
         </div>
 
         {/* MAP SECTION */}
-        <div className="mt-16">
+        {/* <div className="mt-16">
           <h3 className="text-2xl font-bold mb-6 text-emerald-900 text-center">Mikumi National Park</h3>
           <div className="w-full h-96 md:h-[500px] rounded-lg overflow-hidden shadow-lg">
             <Suspense fallback={<MapLoader />}>
@@ -158,7 +158,7 @@ const ContactClient = () => {
             </MapContainer>
             </Suspense>
           </div>
-        </div>
+        </div> */}
       </section>
     </main>
   );
