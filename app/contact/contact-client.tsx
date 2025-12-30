@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import banner from "@/public/contact.jpg";
 
 import { FaFacebookF, FaInstagram, FaPhone, FaTwitter } from "react-icons/fa";
@@ -26,6 +26,10 @@ L.Icon.Default.mergeOptions({
 });
 
 const ContactClient = () => {
+
+  useEffect(() => {
+    console.log(window.innerWidth); // safe
+  }, []);
   const [form, setForm] = useState({
     name: "",
     email: "",
