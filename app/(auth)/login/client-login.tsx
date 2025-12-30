@@ -46,6 +46,7 @@ const router = useRouter()
   document.cookie=`token=${data.access_token}; path=/;`;
 
 
+                toast.success("Login successful")
                 router.push("/dashboad")
                 // You can redirect the user or update the UI accordingly
             } else {
