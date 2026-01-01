@@ -36,10 +36,10 @@ const Nav = () => {
             href: "/destinations"
         },
 
-        // {
-        //     pathname: "Packages",
-        //     href: "/packages"
-        // },
+        {
+            path: "Packages",
+            href: "/packages"
+        },
 
         {
             path: "Blog",
@@ -91,8 +91,6 @@ const Nav = () => {
                         <div className="hidden md:flex space-x-6 items-center">
 
                             {links.map((link,index) =>(<Link href={link.href} key={index} className= {`hover:text-emerald-700 font-medium ${pathname === link.href ? ' bg-emerald-800 text-white px-2 hover:text-white py-1 rounded-md ' : " "}`}>{link.path.toString()} {pathname === link.path}</Link>)
-                                
-
                             )}
 
                         </div>

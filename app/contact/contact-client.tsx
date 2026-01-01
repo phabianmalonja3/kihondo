@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import banner from "@/public/contact.jpg";
 import { FaFacebookF, FaInstagram, FaPhone, FaTwitter } from "react-icons/fa";
 import dynamic from "next/dynamic";
+import Hero from "@/components/ui/hero";
 
 // Leaflet dynamically imported to avoid SSR issues
 const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
@@ -46,15 +47,12 @@ export default function ContactClient() {
   };
 
   return (
-    <main>
-      {/* Header Banner */}
-      <section className="relative h-[60vh] w-full bg-cover">
-        <Image src={banner.src} alt="About Explore Tanzania" fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <h1 className="text-white text-4xl md:text-6xl font-bold">About Us</h1>
-        </div>
-      </section>
-
+    <>
+    <Hero 
+        title="Contact Us"
+        subtitle="Get in touch with us to plan your next unforgettable adventure."
+        image="/images/contact-banner.jpg"
+      />
       {/* CONTACT FORM + INFO + MAP */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
@@ -96,8 +94,12 @@ export default function ContactClient() {
               </div>
             </div>
 
+          </div>
+          
             {/* MAP */}
-            <div className="bg-white shadow rounded-lg p-6">
+           
+        </div>
+         {/* <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-2">Our Location</h3>
               <MapContainer center={[-6.85, 37.65]} zoom={13} scrollWheelZoom={false} className="h-64 w-full rounded-lg">
                 <TileLayer
@@ -108,10 +110,9 @@ export default function ContactClient() {
                   <Popup>We are here!</Popup>
                 </Marker>
               </MapContainer>
-            </div>
-          </div>
-        </div>
+            </div> */}
       </section>
-    </main>
+    </>
+   
   );
 }

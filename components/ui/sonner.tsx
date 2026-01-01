@@ -18,6 +18,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       position="top-center"
+      richColors // <--- ADD THIS PROP
       icons={{
         success: <CircleCheckIcon className="size-4" />,
         info: <InfoIcon className="size-4" />,
@@ -27,17 +28,24 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--success-bg": "#16a34a", // green-600
-          "--success-text": "#ffffff", // white
+          "--success-bg": "#109440", // emerald-600
+          "--success-text": "#ffffff",
+          "--success-border": "#15803d",
+          
           "--error-bg": "#dc2626", // red-600
-          "--error-text": "#ffffff", // white
-          "--info-bg": "#0ea5e9", // blue-500
+          "--error-text": "#ffffff",
+          "--error-border": "#b91c1c",
+
+          "--info-bg": "#0ea5e9",
           "--info-text": "#ffffff",
-          "--warning-bg": "#f59e0b", // amber-500
+          
+          "--warning-bg": "#f59e0b",
           "--warning-text": "#000000",
-          "--loading-bg": "#6366f1", // indigo-500
+          
+          "--loading-bg": "#6366f1",
           "--loading-text": "#ffffff",
-          "--border-radius": "0.5rem", // rounded-lg
+          
+          "--border-radius": "0.8rem",
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",

@@ -47,7 +47,7 @@ const router = useRouter()
 
 
                 toast.success("Login successful")
-                router.push("/dashboad")
+                router.push("/dashboad/overview")
                 // You can redirect the user or update the UI accordingly
             } else {
                 // Login failed

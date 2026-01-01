@@ -1,12 +1,14 @@
+
+"use client"
 import TestimonialsSection from "@/components/web/teststmonial";
 import { Metadata } from "next";
 import Image from "next/image";
 import Bg from "@/public/images/team.jpg";
+import { motion } from "framer-motion";
+import banner from '@/public/contact.jpg';
 
 
-export const metadata:Metadata={
-    title:"About Us | Kihondo"
-}
+
 export default function AboutPage() {
 
     
@@ -14,21 +16,37 @@ export default function AboutPage() {
     <main>
 
       {/* HERO BANNER */}
-      <section className="relative h-[60vh] w-full bg-cover">
-        <Image
-          src="/images/banner.png"
-          alt="About Explore Tanzania"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <h1 className="text-white text-4xl md:text-6xl font-bold">
-            About Us
-          </h1>
-        </div>
-      </section>
-
+     <section className="relative h-[60vh] w-full overflow-hidden">
+  {/* The Background Image */}
+  <Image 
+    src={banner.src} 
+    alt="About Explore Tanzania" 
+    fill 
+    className="object-cover" 
+    priority 
+  />
+  
+  {/* The Dark Overlay */}
+  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4">
+    <motion.h1 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="text-white text-5xl md:text-7xl font-extrabold tracking-tight"
+    >
+      About Us
+    </motion.h1>
+    
+    <motion.p 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.4, duration: 1 }}
+      className="text-emerald-50 mt-4 text-lg md:text-xl max-w-2xl font-light"
+    >
+      Discover the heart of Africa with Tanzania's most trusted safari experts.
+    </motion.p>
+  </div>
+</section>
       {/* ABOUT CONTENT */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">

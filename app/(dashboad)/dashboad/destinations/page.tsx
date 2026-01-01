@@ -4,8 +4,8 @@ import { AddDestination } from "@/components/web/destinations/add-destination";
 import { DeleteDestination } from "@/components/web/destinations/delete";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState,useEffect, Suspense } from "react";
-import { FaPlus, FaEdit, FaTrash, FaEyeSlash, FaEye } from "react-icons/fa";
+import { useState, useEffect, Suspense } from "react";
+import { FaEdit, FaEye } from "react-icons/fa";
 import Loading from './loading';
 
 interface Destination {
@@ -20,23 +20,23 @@ interface Destination {
 
 export default function DestinationsPage() {
 
-  const [refresh,setRefresh]= useState<boolean>(false);
-  const [destinations,setDestinations]= useState<Destination[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [destinations, setDestinations] = useState<Destination[]>([]);
   useEffect(() => {
-     
-      const fetchImages = async () => {
+
+    const fetchImages = async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
         cache: "no-store", // 
       });
-  
+
       const data = await res.json();
-    
+
       setDestinations(data.destinations.data ?? data);
-  
+
     };
-  
+
     fetchImages();
-    }
+  }
     , [refresh]);
   return (
     <div>
@@ -63,58 +63,57 @@ export default function DestinationsPage() {
           </thead>
 
           <tbody>
-            <Suspense  fallback={<Loading />}>
-{destinations.map((dest) => (
-              <tr key={dest.id} className="border-b last:border-none">
-                <td className="px-6 py-4">
-                  <Image
-                    src={dest.image_url ?? "/images/bg.jpg"}
-                    alt={dest.name}
-                    width={80}
-                    height={60}
-                    unoptimized
-                    className="rounded-md object-cover"
-                  />
-                </td>
+            {destinations.map((dest) => (
+              <Suspense fallback={<Loading />}>
+                <tr key={dest.id} className="border-b last:border-none">
+                  <td className="px-6 py-4">
+                    <Image
+                      src={dest.image_url ?? "/images/bg.jpg"}
+                      alt={dest.name}
+                      width={80}
+                      height={60}
+                      unoptimized
+                      className="rounded-md object-cover"
+                    />
+                  </td>
 
-                <td className="px-6 py-4 font-medium">
-                  {dest.name}
-                </td>
+                  <td className="px-6 py-4 font-medium">
+                    {dest.name}
+                  </td>
 
-                <td className="px-6 py-4 text-gray-600">
-                  {dest.location}
-                </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {dest.location}
+                  </td>
 
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium
-                      ${
-                        dest.status === "Active"
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium
+                      ${dest.status === "Active"
                           ? "bg-green-100 text-green-700"
                           : "bg-gray-200 text-gray-700"
-                      }`}
-                  >
-                    {dest.status ? "Active" : "Inactive"}
-                  </span>
-                </td>
+                        }`}
+                    >
+                      {dest.status ? "Active" : "Inactive"}
+                    </span>
+                  </td>
 
-                <td className="px-6 py-4">
-                  <div className="flex gap-3 text-lg">
-                    <Link href={`/destinations/${dest.id}`} className="text-yellow-600 hover:text-blue-800">
-                      <FaEye />
-                    </Link>
-                    <button className="text-blue-600 hover:text-blue-800">
-                      <FaEdit />
-                    </button>
-                    
+                  <td className="px-6 py-4">
+                    <div className="flex gap-3 text-lg">
+                      <Link href={`/destinations/${dest.id}`} className="text-yellow-600 hover:text-blue-800">
+                        <FaEye />
+                      </Link>
+                      <button className="text-blue-600 hover:text-blue-800">
+                        <FaEdit />
+                      </button>
 
-                     <DeleteDestination destination={dest.id} onDelete={() => setRefresh(prev => !prev)} />
-                  </div>
-                </td>
-              </tr>
+
+                      <DeleteDestination destination={dest.id} onDelete={() => setRefresh(prev => !prev)} />
+                    </div>
+                  </td>
+                </tr>
+              </Suspense>
             ))}
-            </Suspense>
-            
+
           </tbody>
         </table>
       </div>

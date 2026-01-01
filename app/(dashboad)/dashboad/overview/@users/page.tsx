@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaUserPlus } from "react-icons/fa";
 
 interface User {
@@ -11,48 +11,36 @@ interface User {
   status: "Active" | "Blocked";
 }
 
-const users: User[] = [
-  {
-    id: 1,
-    name: "Admin User",
-    email: "admin@exploretanzania.tz",
-    role: "Admin",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    email: "john@gmail.com",
-    role: "Customer",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Asha Ali",
-    email: "asha@gmail.com",
-    role: "Customer",
-    status: "Blocked",
-  },
-];
 
 export default function UsersPage() {
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [active, setActive] = useState<boolean>(true);
+  const [role, setRole] = useState<string>("Admin");
+    
+  
+     useEffect(() => {
+       const fetchImages = async () => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+          cache: "no-store", // 
+        });
+    
+        const data = await res.json();
+       
+        setUsers(data.users ?? data)
+  
+  
+      };
+    
+      fetchImages();
+      
+     }, []);
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-emerald-900">
-          Users
-        </h1>
-
-        <button className="flex items-center gap-2 bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 transition">
-          <FaUserPlus />
-          Add User
-        </button>
-      </div>
-
+     
       {/* Table */}
       <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-50 text-sm ">
           <thead>
             <tr className="text-left text-gray-500 border-b">
               <th className="px-6 py-4">Name</th>
@@ -74,16 +62,15 @@ export default function UsersPage() {
                 </td>
                 <td className="px-6 py-4">
                   <span className="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">
-                    {user.role}
+                   Admin
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium
-                      ${
-                        user.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
+                      ${active 
+                          ? ("bg-green-100 text-green-900")
+                          : ("bg-red-100 text-red-700")
                       }`}
                   >
                     {user.status}

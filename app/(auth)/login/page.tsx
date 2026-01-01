@@ -5,7 +5,8 @@ import ClientLogin from "./client-login"
 
 
 export const metadata:Metadata={
-    title:"Login | Safaris "
+    title:"Login | mikumi experiance safari's ",
+    description:"Login for the adminstration"
 }
 export default async function page() {
   return <ClientLogin />

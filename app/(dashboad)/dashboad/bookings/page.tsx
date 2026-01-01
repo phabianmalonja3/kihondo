@@ -19,9 +19,9 @@ export default function BookingsPage() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <FaCalendarCheck className="text-emerald-700 text-3xl" />
-        <h1 className="text-3xl font-bold text-emerald-900">
-          Bookings
-        </h1>
+             <h2 className="text-xl font-semibold mb-4 text-emerald-900">
+          Recent Bookings
+        </h2>
       </div>
 
       {/* Stats */}
@@ -34,7 +34,7 @@ export default function BookingsPage() {
       {/* Table */}
       <div className="bg-white rounded-xl shadow overflow-x-auto">
         <table className="w-full text-left">
-          <thead className="bg-emerald-900 text-white">
+          <thead className="text-emerald-900 bg-white">
             <tr>
               <th className="px-6 py-4">Customer</th>
               <th className="px-6 py-4">Destination</th>

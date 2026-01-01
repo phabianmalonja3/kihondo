@@ -10,10 +10,21 @@ import {
   FaUsers,
   FaSignOutAlt,
   FaStar,
+  FaChartArea,
+  FaBox,
+  FaArchive,
+  FaSuitcaseRolling,
+  FaGifts,
+  FaBoxes,
 } from "react-icons/fa";
 import { LogoutDialog } from "./logout";
 
 const menuItems = [
+  {
+    name: "OverView",
+    href: "/dashboad/overview",
+    icon: <FaChartArea />,
+  },
   {
     name: "Dashboad",
     href: "/dashboad",
@@ -39,11 +50,17 @@ const menuItems = [
     href: "/dashboad/heroes",
     icon: <FaStar />,
   },
+
   {
-    name: "Users",
-    href: "/dashboad/users",
-    icon: <FaUsers />,
+    name: "Events",               // ✅ New item
+    href: "/dashboad/events",      // Set the URL
+    icon: <FaCalendarCheck />,     // You can reuse Calendar icon or pick another
   },
+  {
+    name: "Packages",               // ✅ New item
+    href: "/dashboad/packages",      // Set the URL
+    icon: <FaBoxes />,     // You can reuse Calendar icon or pick another
+  }
 ];
 
 export default function Sidebar() {

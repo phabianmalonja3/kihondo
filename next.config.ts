@@ -5,9 +5,9 @@ const nextConfig = {
       fullUrl: true,
     },
   },
-  experimental: {
+  
     allowedDevOrigins: ["*"], // dev only
-  },
+  
   images: {
   remotePatterns: [
     {
@@ -27,3 +27,5 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
+

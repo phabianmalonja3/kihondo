@@ -24,7 +24,7 @@ export default function GalleryPage() {
   const [gallaries, setGallaries] = useState<ImageItem[]>([]);
   const [link, setLink] = useState([]);
  useEffect(() => {
-    // Fetch gallery items from API if needed
+
     const fetchImages = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
       cache: "no-store", // 
@@ -64,6 +64,7 @@ export default function GalleryPage() {
                       fill
                       className="object-cover"
                       priority
+                      unoptimized
                     />
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white py-16 ">
                      <h1 className="text-4xl font-bold">Gallery</h1>
@@ -95,7 +96,6 @@ export default function GalleryPage() {
         ))}
       </div>
 
-      {/* Popup Carousel */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
           <div className="relative w-full max-w-4xl px-4">
