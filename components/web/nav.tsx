@@ -113,47 +113,8 @@ const Nav = () => {
                 {open && (
                     <div className="md:hidden bg-white border-t">
                         <div className="flex flex-col px-4 py-4 space-y-2">
-                            <Link href="/" className={`hover:text-emerald-700 font-medium transition-all duration-300 ease-in-out ${pathname === '/' ? ' bg-emerald-600 text-white px-2 hover:text-white py-1 rounded-md ' : " "}`}>Home</Link>
-
-                            <Link href={"/destinations"} className={`hover:text-emerald-700 font-medium ${pathname === '/destinations' ? ' bg-emerald-600 text-white px-2 py-1 rounded-md hover:text-white' : " "}`}></Link>
-                            <Link href="/about" className={`hover:text-emerald-700 font-medium ${pathname === '/about' ? ' bg-emerald-600 text-white px-2 py-1 rounded-md hover:text-white' : " "}`}>About</Link>
-
-                            {/* Mobile Destinations */}
-                            <div>
-                                <button
-                                    onClick={() => setMobileDestOpen(!mobileDestOpen)}
-                                    className="flex justify-between w-full  py-2 font-medium hover:bg-emerald-50 rounded"
-                                >
-                                    Destinations
-                                </button>
-                                {mobileDestOpen && (
-                                    <div className="absolute hidden group-hover:block top-full left-0 mt-2 w-48 bg-white border  shadow-xl">
-                                        <Link href="/destinations/safari" className="block px-4 py-2 border-b-2 hover:bg-emerald-50">Safari</Link>
-                                        <Link href="/destinations/zanzibar" className="block px-4 py-2 border-b-2 hover:bg-emerald-50">Zanzibar</Link>
-                                        <Link href="/destinations/kilimanjaro" className="block px-4 py-2 hover:bg-emerald-50">Kilimanjaro</Link>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Mobile Packages */}
-                            <div>
-                                <button
-                                    onClick={() => setMobilePackageOpen(!mobilePackageOpen)}
-                                    className="flex justify-between w-full  py-2 font-medium hover:bg-emerald-50 rounded"
-                                >
-                                    Packages
-                                </button>
-                                {mobilePackageOpen && (
-                                    <div className="pl-4 mt-1 flex flex-col space-y-1">
-                                        <Link href="/packages/family" className="block px-4 py-2 border-2 hover:bg-emerald-50">Family Package</Link>
-                                        <Link href="/packages/honeymoon" className="block px-4 py-2 border-b-2 hover:bg-emerald-50">Honeymoon Package</Link>
-                                        <Link href="/packages/adventure" className="block px-4 py-2 hover:bg-emerald-50">Adventure Package</Link>
-                                    </div>
-                                )}
-                            </div>
-
-                            <Link href="/blog">Blog</Link>
-                            <Link href="/contact">Contact</Link>
+                             {links.map((link,index) =>(<Link href={link.href} key={index} className= {`hover:text-emerald-700 font-medium ${pathname === link.href ? ' bg-emerald-800 text-white px-2 hover:text-white py-1 rounded-md ' : " "}`}>{link.path.toString()} {pathname === link.path}</Link>)
+                            )}
 
                             <a href="/booking" className="bg-emerald-700 text-white px-4 py-2 rounded text-center mt-2">Book Now</a>
                         </div>

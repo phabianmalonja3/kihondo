@@ -51,7 +51,7 @@ export default function ContactClient() {
     <Hero 
         title="Contact Us"
         subtitle="Get in touch with us to plan your next unforgettable adventure."
-        image="/images/contact-banner.jpg"
+        image="/images/contact-us.jpg"
       />
       {/* CONTACT FORM + INFO + MAP */}
       <section className="py-16 px-4">
