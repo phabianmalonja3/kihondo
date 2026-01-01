@@ -187,8 +187,8 @@ export function AddEvent({ onAddEvent }: Props) {
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
+                  <FormItem className="">
+                    <FormControl className="w-full">
                       <Input placeholder="Event Title" {...field} />
                     </FormControl>
                     <FormMessage />
@@ -200,9 +200,9 @@ export function AddEvent({ onAddEvent }: Props) {
                 control={form.control}
                 name="category_id"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
+                      <FormControl className="w-full">
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>

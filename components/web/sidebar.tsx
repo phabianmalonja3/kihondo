@@ -35,7 +35,7 @@ export default function Sidebar() {
   return (
     <>
       {/* MOBILE TOP BAR (Visible only on small screens) */}
-      <div className="lg:hidden flex items-center justify-between bg-emerald-900 text-white p-4 sticky top-0 z-50 shadow-md">
+      <div className="lg:hidden   bg-emerald-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <span className="font-bold">Explore Tanzania</span>
         <button onClick={toggleSidebar} className="p-2 bg-emerald-800 rounded-md">
           {isOpen ? <X size={24} /> : <Menu size={24} />}

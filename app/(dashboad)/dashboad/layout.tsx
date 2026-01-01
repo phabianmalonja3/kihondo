@@ -19,7 +19,7 @@ export default function DashboardLayout({
          <Sidebar />
    
          {/* Main Content */}
-         <main className="ml-64 w-full min-h-screen bg-gray-100 p-6">
+         <main className=" lg:ml-64 w-full min-h-screen bg-gray-100 p-6">
         
            {children}
          </main>

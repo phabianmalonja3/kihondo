@@ -40,7 +40,7 @@ const recentBookings = [
 
 export default function Dashboad() {
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className=" bg-gray-100 p-6">
       {/* Page Title */}
       
       <h1 className="text-3xl font-bold text-emerald-900 mb-6">

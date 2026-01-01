@@ -39,7 +39,7 @@ export default function DestinationsPage() {
   }
     , [refresh]);
   return (
-    <div>
+    <div className="px-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-emerald-900">
