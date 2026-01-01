@@ -49,20 +49,14 @@ export default function Event() {
     <main className="bg-zinc-50 dark:bg-black min-h-screen font-sans">
 
       {/* HERO BANNER */}
-       <section className="relative h-[60vh] w-full bg-cover">
-                          <Image
-                            src={banner.src}
-                            alt="About Explore Tanzania"
-                            fill
-                            className="object-cover"
-                            priority
-                          />
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white py-16 ">
-                           <h1 className="text-4xl font-bold">Tours & Safaris</h1>
-             
-                          </div>
-              
-                        </section>
+      
+
+                        <div className="bg-emerald-900 text-white py-16 text-center">
+                <h1 className="text-4xl font-bold">Tours & Safaris</h1>
+                <p className="mt-3 text-gray-200">
+                    Get in touch with us to plan your next unforgettable adventure.
+                </p>
+            </div>
       {/* BLOG LISTING */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

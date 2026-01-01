@@ -56,23 +56,13 @@ export default function GalleryPage() {
 
     
     <div className="min-h-screen bg-gray-50">
+      <div className="bg-emerald-900 text-white py-16 text-center">
+                <h1 className="text-4xl font-bold">Gallery</h1>
+                <p className="mt-3 text-gray-200">
+                    Discover the top Gallery in Tanzania
+                </p>
+            </div>
 
-      <section className="relative h-[60vh] w-full bg-cover">
-                    <Image
-                      src={banner.src}
-                      alt="About Explore Tanzania"
-                      fill
-                      className="object-cover"
-                      priority
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white py-16 ">
-                     <h1 className="text-4xl font-bold">Gallery</h1>
-       
-                    </div>
-        
-                  </section>
-     
 
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {gallaries.map((g, index: number) => (  // <-- index typed as number

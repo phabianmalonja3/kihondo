@@ -48,11 +48,13 @@ export default function ContactClient() {
 
   return (
     <>
-    <Hero 
-        title="Contact Us"
-        subtitle="Get in touch with us to plan your next unforgettable adventure."
-        image="/images/contact-us.jpg"
-      />
+   
+      <div className="bg-emerald-900 text-white py-16 text-center">
+                <h1 className="text-4xl font-bold">Contact Us</h1>
+                <p className="mt-3 text-gray-200">
+                    Get in touch with us to plan your next unforgettable adventure.
+                </p>
+            </div>
       {/* CONTACT FORM + INFO + MAP */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">

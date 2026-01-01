@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import Link from 'next/link';
 
 interface Event {
   id: string;
@@ -73,10 +74,12 @@ export default function Explore() {
           <CarouselContent className="-ml-4">
             {events.map((event) => (
               <CarouselItem 
-                key={event.id} 
+                key={event.id}
                 className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
               >
                 <div className="h-full transition-transform duration-300 hover:-translate-y-2">
+              <Link href={`/blog/${event.id}`}  >
+              
                   <Card className="overflow-hidden border-none shadow-sm hover:shadow-xl transition-shadow h-full">
                     <div className="relative aspect-[4/3]">
                       <Image
@@ -96,6 +99,7 @@ export default function Explore() {
                       </p>
                     </CardContent>
                   </Card>
+              </Link>
                 </div>
               </CarouselItem>
             ))}

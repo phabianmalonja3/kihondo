@@ -28,7 +28,7 @@ export default function Footer() {
 
         {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-white">Explore Tanzania</h2>
+          <h2 className="text-2xl font-bold text-white">Mukumi Wildlife Tanzania</h2>
           <p className="mt-4 text-sm text-gray-300 leading-relaxed">
             Experience Tanzania’s wildlife, beaches, culture, and breathtaking landscapes.
           </p>

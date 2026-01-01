@@ -85,7 +85,7 @@ const Nav = () => {
                         {/* Logo */}
                         <Link href={"/"} className="flex items-center gap-2">
                             <Logo />
-                            <span className="text-xl font-bold text-emerald-900">Mikumi Wildlife experiance Safari</span>
+                            <span className="text-xl font-bold text-emerald-900">Mikumi Wildlife Safari</span>
                         </Link>
                         {/* Desktop Links */}
                         <div className="hidden md:flex space-x-6 items-center">
