@@ -23,12 +23,17 @@ export default function DestinationsPage() {
   const [destinations,setDestinations]= useState<Destination[]>([]);
   const [loading,setLoading]= useState<boolean>(true);
 useEffect(() => {
+
+
+  
      
+
+  
 
 
   try {
      const fetchImages = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
+ const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
         cache: "no-store", // 
       });
   
@@ -39,6 +44,7 @@ useEffect(() => {
       setDestinations(data.destinations.data ?? data);
 
       setLoading(false)
+     
   
     };
 

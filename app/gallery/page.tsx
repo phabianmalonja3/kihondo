@@ -15,6 +15,7 @@ import {
 import banner from "@/public/contact.jpg"
 import {ImageItem} from '@/lib/constants'
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 
 export default function GalleryPage() {
@@ -27,9 +28,9 @@ export default function GalleryPage() {
   const [link, setLink] = useState([]);
  useEffect(() => {
 
-  try {
-      const fetchImages = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
+   const getGallery = async ()=> {
+      try {
+           const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
       cache: "no-store", // 
     });
 
@@ -38,19 +39,17 @@ export default function GalleryPage() {
     setGallaries(data.galleries.data ?? data);
 
 
-    setLink(data.galleries.links)
+    setLink(data.galleries.links) 
+      } catch (error) {
+        toast.error("Failed to fetch events");
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  };
+    getGallery();
 
-  fetchImages();
-  } catch (error) {
-    
-  }finally{
-    setLoading(false)
-  }
-
-  
- })
+ },[]);
 
   
   const openPopup = (index: number) => {  // <-- index typed as number
