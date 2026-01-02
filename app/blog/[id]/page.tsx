@@ -190,10 +190,15 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
 
         {/* SIDEBAR */}
+
+
         <aside className="space-y-8">
           <Link href="/blogs" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all font-medium">
             <FaArrowLeft size={12} /> View All Events
           </Link>
+
+
+
 
           <div className="p-8 rounded-[2.5rem] bg-emerald-900 text-white sticky top-10 overflow-hidden">
             <div className="relative z-10">
@@ -205,6 +210,8 @@ export default async function EventDetailPage({ params }: Props) {
                   Inquire Now
                 </Link>
             </div>
+
+            
           </div>
 
           {/* Client-side Share Buttons */}

@@ -12,12 +12,13 @@ import {
   FaStar,
   FaChartArea,
   FaBoxes,
+  FaGlobe,
 } from "react-icons/fa";
 import { LogoutDialog } from "./logout";
 
 const menuItems = [
+  { name: "Website", href: "/", icon: <FaGlobe /> },
   { name: "OverView", href: "/dashboad/overview", icon: <FaChartArea /> },
-  { name: "Dashboad", href: "/dashboad", icon: <FaTachometerAlt /> },
   { name: "Bookings", href: "/dashboad/bookings", icon: <FaCalendarCheck /> },
   { name: "Destinations", href: "/dashboad/destinations", icon: <FaMapMarkedAlt /> },
   { name: "Gallery", href: "/dashboad/gallery", icon: <FaImages /> },

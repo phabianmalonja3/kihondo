@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { FaCalendarCheck } from "react-icons/fa";
 import { AddEvent } from "./add-event";
 import { DeleteEvent } from "./delete";
+import { ShowEvent } from "./show-event";
 
 
 interface Event {
@@ -121,7 +122,7 @@ export default function Events() {
                   </td>
 
                   <td className="px-6 py-4">
-
+<ShowEvent event={event} />
                     <DeleteEvent id={event.id} onDelete={() => setRefresh(prev => !prev)} />
                     {/* Edit / Delete buttons later */}
                   </td>
