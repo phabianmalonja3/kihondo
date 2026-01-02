@@ -8,12 +8,7 @@ import elephant from "@/public/images/el.jpg"
 import Link from "next/link";
 export default function Home() {
 
-  const destinations = [
-    { name: "Serengeti Safari", image: "/images/safari.jpg" },
-    { name: "Zanzibar Beach", image: "/images/zanzibar.jpg" },
-    { name: "Mount Kilimanjaro", image: "/images/kilimanjaro.jpg" },
-    { name: "Ngorongoro Crater", image: "/images/ngorongoro.jpg" },
-  ];
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className=" w-full   py-2 bg-white dark:bg-black">

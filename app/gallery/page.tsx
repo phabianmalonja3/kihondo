@@ -14,6 +14,7 @@ import {
 
 import banner from "@/public/contact.jpg"
 import {ImageItem} from '@/lib/constants'
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function GalleryPage() {
@@ -21,11 +22,13 @@ export default function GalleryPage() {
 
   const [activeIndex, setActiveIndex] = useState<number>(0); // <-- index is a number
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [gallaries, setGallaries] = useState<ImageItem[]>([]);
   const [link, setLink] = useState([]);
  useEffect(() => {
 
-    const fetchImages = async () => {
+  try {
+      const fetchImages = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`, {
       cache: "no-store", // 
     });
@@ -40,8 +43,14 @@ export default function GalleryPage() {
   };
 
   fetchImages();
+  } catch (error) {
+    
+  }finally{
+    setLoading(false)
   }
-  , []);
+
+  
+ })
 
   
   const openPopup = (index: number) => {  // <-- index typed as number
@@ -50,6 +59,10 @@ export default function GalleryPage() {
   };
 
   const closePopup = () => setIsOpen(false);
+
+  if(loading){
+    return <GallerySkeleton />
+  }
 
   return (
 
@@ -139,6 +152,24 @@ export default function GalleryPage() {
           <button className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">Next</button>
         </div>
       </section>
+    </div>
+  );
+}
+
+
+ function GallerySkeleton() {
+  return (
+    <div className="py-20 max-w-7xl mx-auto px-4">
+      <Skeleton className="h-10 w-64 mx-auto mb-12" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="aspect-[4/3] w-full rounded-xl" />
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

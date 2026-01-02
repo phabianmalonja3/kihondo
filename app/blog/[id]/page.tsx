@@ -3,7 +3,7 @@ import { EventSkeleton } from "@/components/web/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { 
   FaFacebookF, 
   FaTwitter, 
@@ -40,6 +40,8 @@ interface Props {
  * Uses the updated Laravel logic: filtering by category and excluding current ID
  */
 async function getRelatedEvents(categoryId: string | null, currentId: string) {
+
+  const [loading,setLoading]= useState<boolean>(true)
   if (!categoryId) return [];
   
   try {
@@ -55,6 +57,8 @@ async function getRelatedEvents(categoryId: string | null, currentId: string) {
     return data.events; 
   } catch (error) {
     return [];
+  }finally{
+    setLoading(false)
   }
 }
 

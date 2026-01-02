@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import lion from "@/public/images/lion.jpg"
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 
 interface Destination{
@@ -15,26 +16,41 @@ interface Destination{
 }
 
 
+    
+
+
 const Destination = () => {
 
  
     const [destinations,setDestinations]= useState<Destination[]>([]);
-    useEffect(() => {
-       
-        const fetchImages = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
+    const [loading,setLoading]= useState<boolean>(true);
+   
+
+
+     const fetchImages = async () => {
+      try {
+         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
           cache: "no-store", // 
         });
-    
+        
         const data = await res.json();
       
         setDestinations(data.destinations.data ?? data);
     
-      };
-    
-      fetchImages();
+      
+      } catch (error) {
+        console.error("Failed to fetch heroes:", error);
+      } finally {
+        setLoading(false); // Stop loading regardless of success/fail
       }
-      , []);
+    };
+
+    fetchImages();
+    
+      if (loading) {
+        return <DestinationSkeleton />
+        
+      }
     return (
        <section className="py-16 px-4 bg-gray-50 dark:bg-zinc-900">
         <div className="max-w-7xl mx-auto">
@@ -64,6 +80,25 @@ const Destination = () => {
         </div>
       </section>
     );
+}
+
+
+
+export function DestinationSkeleton() {
+  return (
+    <div className="py-20 max-w-7xl mx-auto px-4">
+      <Skeleton className="h-10 w-64 mx-auto mb-12" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="aspect-[4/3] w-full rounded-xl" />
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default Destination;

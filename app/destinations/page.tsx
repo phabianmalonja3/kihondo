@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense, useEffect, useState } from "react";
@@ -20,9 +21,13 @@ const destinations: Destination[] = [
 export default function DestinationsPage() {
 
   const [destinations,setDestinations]= useState<Destination[]>([]);
+  const [loading,setLoading]= useState<boolean>(true);
 useEffect(() => {
      
-      const fetchImages = async () => {
+
+
+  try {
+     const fetchImages = async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
         cache: "no-store", // 
       });
@@ -32,12 +37,27 @@ useEffect(() => {
       console.log(data.destinations.data ?? data);
     
       setDestinations(data.destinations.data ?? data);
+
+      setLoading(false)
   
     };
+
+     fetchImages();
+    
+  } catch (error) {
+    
+  }finally{
+    setLoading(false)
+  }
+     
   
-    fetchImages();
+   
     }
     , []);
+
+    if(loading){
+      return <DestinationSkeleton />
+    }
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,6 +103,23 @@ useEffect(() => {
         ))}
       </div>
       </Suspense>
+    </div>
+  );
+}
+
+ function DestinationSkeleton() {
+  return (
+    <div className="py-20 max-w-7xl mx-auto px-4">
+      <Skeleton className="h-10 w-64 mx-auto mb-12" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="aspect-[4/3] w-full rounded-xl" />
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
