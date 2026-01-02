@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+"use client"
 import { EventSkeleton } from "@/components/web/skeleton";
 import Image from "next/image";
 import Link from "next/link";
