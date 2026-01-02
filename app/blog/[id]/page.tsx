@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { EventSkeleton } from "@/components/web/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -174,7 +175,7 @@ export default async function EventDetailPage({ params }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
 
 
-              <Suspense fallback={<RelatedEventsSkeleton />}>
+              <Suspense fallback={<EventSkeleton />}>
                 {relatedEvents.length > 0 ? (
                 relatedEvents.map((item: EventData) => (
                   <Link href={`/events/${item.id}`} key={item.id} className="group block">
@@ -261,23 +262,5 @@ export default async function EventDetailPage({ params }: Props) {
     </main>
   );
 
-    function RelatedEventsSkeleton() {
-  return (
-    <div className="pt-16 border-t border-zinc-100 dark:border-zinc-800">
-      <Skeleton className="h-8 w-64 mb-10" /> {/* Title */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-        {[1, 2].map((i) => (
-          <div key={i} className="space-y-4">
-            <Skeleton className="h-64 w-full rounded-3xl" /> {/* Image */}
-            <Skeleton className="h-6 w-3/4 rounded-lg" /> {/* Title */}
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-full" /> {/* Desc line 1 */}
-              <Skeleton className="h-4 w-5/6" /> {/* Desc line 2 */}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+
 }
