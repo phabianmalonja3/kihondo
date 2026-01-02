@@ -191,7 +191,7 @@ export default async function EventDetailPage({ params }: Props) {
 
         {/* SIDEBAR */}
         <aside className="space-y-8">
-          <Link href="/events" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all font-medium">
+          <Link href="/blogs" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all font-medium">
             <FaArrowLeft size={12} /> View All Events
           </Link>
 
