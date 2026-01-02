@@ -1,6 +1,8 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { 
   FaFacebookF, 
   FaTwitter, 
@@ -170,7 +172,10 @@ export default async function EventDetailPage({ params }: Props) {
           <div className="pt-16 border-t border-zinc-100 dark:border-zinc-800">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-10">You might also like</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              {relatedEvents.length > 0 ? (
+
+
+              <Suspense fallback={<RelatedEventsSkeleton />}>
+                {relatedEvents.length > 0 ? (
                 relatedEvents.map((item: EventData) => (
                   <Link href={`/events/${item.id}`} key={item.id} className="group block">
                     <div className="relative h-64 w-full rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-6 shadow-lg">
@@ -198,6 +203,7 @@ export default async function EventDetailPage({ params }: Props) {
               ) : (
                 <p className="text-zinc-500 italic col-span-2">No other events found in this category.</p>
               )}
+            </Suspense>
             </div>
           </div>
         </div>
@@ -254,4 +260,24 @@ export default async function EventDetailPage({ params }: Props) {
       </section>
     </main>
   );
+
+    function RelatedEventsSkeleton() {
+  return (
+    <div className="pt-16 border-t border-zinc-100 dark:border-zinc-800">
+      <Skeleton className="h-8 w-64 mb-10" /> {/* Title */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+        {[1, 2].map((i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="h-64 w-full rounded-3xl" /> {/* Image */}
+            <Skeleton className="h-6 w-3/4 rounded-lg" /> {/* Title */}
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" /> {/* Desc line 1 */}
+              <Skeleton className="h-4 w-5/6" /> {/* Desc line 2 */}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 }
