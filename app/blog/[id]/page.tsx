@@ -58,7 +58,7 @@ async function RelatedEventsList({ categoryId, currentId }: { categoryId: string
   return (
     <>
       {relatedEvents.map((item: EventData) => (
-        <Link href={`/events/${item.id}`} key={item.id} className="group block">
+        <Link href={`/blog/${item.id}`} key={item.id} className="group block">
           <div className="relative h-64 w-full rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-6 shadow-lg">
             <Image 
               src={item.images?.[0] || "/placeholder.jpg"} 
