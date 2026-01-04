@@ -13,20 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes, FaTrash, FaUpload } from "react-icons/fa";
 import { toast } from "sonner";
-
+import { useRefresh } from "@/context/RefreshContext";
 interface Props {
   onAddDestination: () => void;
 }
 
+interface ImagePreview {
+  file: File;
+  preview: string;
+  progress: number;
+}
 export function AddDestination({ onAddDestination }: Props) {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
+
+  const {refreshData} = useRefresh()
+
+  const [image, setImage] = useState<ImagePreview | null>(null);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -36,7 +44,7 @@ export function AddDestination({ onAddDestination }: Props) {
     }
 
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("image", image.file);
     formData.append("name", name);
     formData.append("location", location);
 
@@ -60,13 +68,46 @@ export function AddDestination({ onAddDestination }: Props) {
       setName("");
       setLocation("");
 
-      onAddDestination(); // refresh list
+      refreshData()
+      // onAddDestination(); // refresh list
       setOpen(false); // ✅ CLOSE dialog
     } catch (error) {
       toast.error("Failed to upload destination");
     } finally {
       setLoading(false);
     }
+  };
+
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return ;
+
+    if (image) {
+      URL.revokeObjectURL(image.preview)
+      
+    }
+
+    const newImage :ImagePreview={
+      file,
+      preview:URL.createObjectURL(file),
+      progress:0
+    }
+
+
+    setImage(newImage);
+
+   
+  };
+
+
+  const removeImage = () => {
+
+    if(image){
+
+      URL.revokeObjectURL(image.preview)
+
+    }
+    setImage(null);
   };
 
   return (
@@ -91,13 +132,10 @@ export function AddDestination({ onAddDestination }: Props) {
           </AlertDialogHeader>
 
           {/* Image */}
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files?.[0] || null)}
-            className="mb-2"
-          />
 
+ 
+        
+         
           {/* Name */}
           <Input
             value={name}
@@ -113,6 +151,33 @@ export function AddDestination({ onAddDestination }: Props) {
             onChange={(e) => setLocation(e.target.value)}
             className="mb-2"
           />
+
+            <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted transition my-3">
+                        <FaUpload className="text-xl mb-2 text-muted-foreground" />
+                        <p className="text-sm font-medium">Upload event image</p>
+                        <p className="text-xs text-muted-foreground">Click to browse </p>
+                        <Input type="file" accept="image/*"  className="hidden" onChange={handleImageChange} />
+          </label>
+           {image  && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                
+                  <div  className="relative border rounded-lg overflow-hidden">
+                    <img src={image.preview} alt="preview" className="h-28 w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage()}
+                      className="absolute top-1 right-1 bg-black/70 text-white p-1 rounded"
+                    >
+                      <FaTrash size={10} />
+                    </button>
+                    <div className="h-1 bg-muted">
+                      <div className="h-1 bg-emerald-600 transition-all" style={{ width: `${image.progress}%` }} />
+                    </div>
+                  </div>
+               
+              </div>
+            )}
+
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={loading}>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Image from "next/image"; // Better performance/sharpness
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -8,99 +9,107 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi
 } from "@/components/ui/carousel";
- // Import the skeleton
+
+import { cn } from "@/lib/utils";
 import { Hero } from "@/lib/heros";
-import { Skeleton } from "../ui/skeleton";
+import HeroSkeleton from "@/components/web/heroSkeleton";
+
 
 export function CarouselPlugin() {
-  const [heroes, setHeroes] = useState<Hero[] | null>(null);
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [heroes, setHeroes] = useState<Hero[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [api, setApi] = useState<CarouselApi>();
+  const [active, setActive] = useState(0);
 
-  const autoplay = useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: false })
-  );
+  const autoplay = useMemo(() => Autoplay({ delay: 5000, stopOnInteraction: false }), []);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/heroes`, {
-          cache: "no-store",
-        });
-        const data = await res.json();
-        setHeroes(data.heroes.data ?? data);
-      } catch (error) {
-        console.error("Failed to fetch heroes:", error);
-      } finally {
-        setLoading(false); // Stop loading regardless of success/fail
-      }
-    };
+    if (!api) return;
+    api.on("select", () => setActive(api.selectedScrollSnap()));
+  }, [api]);
 
-    fetchImages();
+  useEffect(() => {
+    let mounted = true;
+    async function fetchHeroes() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/heroes`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch heroes");
+        const data = await res.json();
+        if (mounted) setHeroes(data?.heroes?.data ?? data ?? []);
+      } catch (err) {
+        if (mounted) setError(true);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    fetchHeroes();
+    return () => { mounted = false; };
   }, []);
 
-  // Show Skeleton if loading or if we have no data yet
-  if (loading || !heroes) {
-    return <HeroSkeleton />;
-  }
+  if (loading) return <HeroSkeleton />;
+  if (error || heroes.length === 0) return null;
 
   return (
-    <section className="relative h-screen w-full">
+    <section className="relative h-screen w-full overflow-hidden bg-zinc-950">
       <Carousel
-        plugins={[autoplay.current]}
-        onMouseEnter={autoplay.current.stop}
-        onMouseLeave={autoplay.current.reset}
-        className="h-full"
+        setApi={setApi}
+        plugins={[autoplay]}
+        className="h-full w-full"
+        opts={{ loop: true, duration: 30 }} // Smoother transitions
       >
-        <CarouselContent className="h-full">
-          {heroes.map((slide, index) => (
-            <CarouselItem key={index} className="h-full">
-              <div
-                className="h-screen bg-cover bg-center"
-                style={{ backgroundImage: `url(${slide.image_url})` }}
-              >
-                <div className="h-full bg-black/50 flex items-center justify-center text-center px-6">
-                  <div className="max-w-3xl text-white">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                      {slide.title}
-                    </h1>
-                    <p className="text-lg md:text-xl mb-6">
-                      {slide.subtitle}
-                    </p>
-                    <a
-                      href="#tours"
-                      className="inline-block bg-emerald-900 hover:bg-emerald-700 transition px-6 py-3 rounded-lg text-white text-lg"
-                    >
-                      Explore Tours
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-6 " />
-        <CarouselNext className="right-6 " />
+       <CarouselContent className="ml-0 h-screen">
+  {heroes.map((slide, index) => (
+    <CarouselItem key={slide.id || index} className="relative h-screen w-full pl-0 overflow-hidden">
+      
+      {/* BACKGROUND IMAGE LAYER */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={slide.image_url}
+          alt={slide.title}
+          fill
+          priority={index === 0}
+          unoptimized
+          quality={100} // High quality for tourism visuals
+          sizes="100vw"
+          className={cn(
+            "object-cover object-center transition-transform duration-[10000ms] ease-out",
+            active === index ? "scale-110" : "scale-100" // Subtle Ken Burns effect
+          )}
+        />
+        {/* Gradients often look better than flat overlays for tourism */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+      </div>
+
+      {/* TEXT CONTENT LAYER */}
+      <div className="relative z-10 flex h-full items-center justify-center px-6">
+        <div className={cn(
+          "max-w-5xl text-center transition-all duration-1000 delay-300",
+          active === index ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        )}>
+          <h1 className="text-6xl md:text-9xl font-black text-white uppercase tracking-tighter mb-6 drop-shadow-2xl">
+            {slide.title}
+          </h1>
+          <p className="text-xl md:text-3xl text-white/95 font-medium mb-10 max-w-3xl mx-auto drop-shadow-md">
+            {slide.subtitle}
+          </p>
+          <a
+            href="#tours"
+            className="inline-flex h-16 items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-bold px-12 rounded-full transition-all hover:scale-105 active:scale-95 shadow-2xl"
+          >
+            Start Your Journey
+          </a>
+        </div>
+      </div>
+      
+    </CarouselItem>
+  ))}
+</CarouselContent>
+        <CarouselPrevious className="hidden md:flex left-8 h-12 w-12 bg-white/10 hover:bg-emerald-600 border-none text-white backdrop-blur-md" />
+        <CarouselNext className="hidden md:flex right-8 h-12 w-12 bg-white/10 hover:bg-emerald-600 border-none text-white backdrop-blur-md" />
       </Carousel>
     </section>
   );
-
- 
 }
-
- export function HeroSkeleton() {
-  return (
-    <section className="relative h-screen w-full bg-zinc-200 dark:bg-zinc-900 animate-pulse">
-      {/* Background Simulation */}
-      <div className="h-full bg-black/40 flex items-center justify-center text-center px-6">
-        <div className="max-w-3xl w-full flex flex-col items-center">
-          {/* Title Placeholder */}
-          <Skeleton className="h-12 md:h-16 w-3/4 mb-4 bg-white/20" />
-          {/* Subtitle Placeholder */}
-          <Skeleton className="h-6 w-1/2 mb-6 bg-white/20" />
-          {/* Button Placeholder */}
-          <Skeleton className="h-12 w-40 rounded-lg bg-emerald-900/30" />
-        </div>
-      </div>
-    </section>
-  )}

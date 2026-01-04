@@ -6,24 +6,21 @@ const nextConfig = {
     },
   },
   
-    allowedDevOrigins: ["*"], // dev only
+  experimental: {
+    allowedDevOrigins: ['127.0.0.1:3000', 'localhost:3000']
+  },
+  
   
   images: {
-  remotePatterns: [
-    {
-      protocol: "http",
-      hostname: "localhost",
-      port: "8000",
-      pathname: "/storage/**",
-    },
-    {
-      protocol: "http",
-      hostname: "127.0.0.1",
-      port: "8000",
-      pathname: "/storage/**",
-    },
-  ],
-},
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '188.245.179.190',
+        port: '8000',
+        pathname: '/storage/**', // Allows all paths from this host
+      },
+    ],
+  },
 };
 
 export default nextConfig;

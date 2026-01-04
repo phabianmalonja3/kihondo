@@ -94,7 +94,7 @@ export default function Events() {
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
                       {event.images?.length > 0 ? (
-                        event.images.slice(0, 3).map((img, index) => (
+                        event.images.slice(0, 3).map((img, index ) => (
                           <Image
                             key={index}
                             src={img}

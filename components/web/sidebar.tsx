@@ -17,7 +17,7 @@ import {
 import { LogoutDialog } from "./logout";
 
 const menuItems = [
-  { name: "Website", href: "/", icon: <FaGlobe /> },
+  { name: "Website", href: "/", icon: <FaGlobe /> , isTaget:true },
   { name: "OverView", href: "/dashboad/overview", icon: <FaChartArea /> },
   { name: "Bookings", href: "/dashboad/bookings", icon: <FaCalendarCheck /> },
   { name: "Destinations", href: "/dashboad/destinations", icon: <FaMapMarkedAlt /> },
@@ -75,6 +75,11 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+              
+
+                // {item.isTaget? `target="_blank"` : ""}
+
+                
                 onClick={() => setIsOpen(false)} // Close sidebar when link is clicked
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition
                   ${

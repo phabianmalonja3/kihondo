@@ -32,8 +32,13 @@ const Nav = () => {
         },
 
         {
-            path: "Destinations",
+            path: "Tours",
             href: "/destinations"
+        },
+        {
+            path: "Zanzibar",
+            href: "/packages/zanzibar"
+            
         },
 
         {

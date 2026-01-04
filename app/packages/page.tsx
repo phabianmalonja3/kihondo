@@ -38,6 +38,8 @@ export default function Package() {
     }
         , []);
 
+        
+
     return (
         <>
         
@@ -60,7 +62,7 @@ export default function Package() {
                             >
                                 <Image
                                     src={dest.image_url ?? "/images/bg.jpg"}
-                                    alt={dest.name}
+                                    alt={dest?.name}
                                     width={600}
                                     height={400}
                                     unoptimized
@@ -79,9 +81,9 @@ export default function Package() {
                                     {dest.options.map(e=>(
 
 
-                                        <>
+                                        <div key={e}>
                                          <p className="text-gray-200 text-sm mt-1"><CupSoda />{e}</p>
-                                        </>
+                                        </div>
                                     ))}
                                   
                                     

@@ -9,16 +9,19 @@ import Image from "next/image";
 import { DeletePackage } from "./delete";
 
 
-
+interface Location{
+  id:string, name:string
+}
 
 
 interface Package{
   id:string,
   name:string,
-  location:string
+
   price:number
   image_url:string,
   options:[]
+  location:Location
 
 }
 
@@ -103,7 +106,7 @@ export  default  function Packages() {
                                  </td>
                 <td className="px-6 py-4">{pk.price}</td>
                 <td className="px-6 py-4">{pk.options.join(" , ")}</td>
-                <td className="px-6 py-4">{pk.location}</td>
+                <td className="px-6 py-4">{pk.location.name}</td>
                 <td className="px-6 py-4">
                  <DeletePackage id={pk.id} onDelete={()=>setRefresh(prev=>!prev)}  />
                 </td>

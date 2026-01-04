@@ -20,8 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash, FaUpload } from "react-icons/fa";
 import { toast } from "sonner";
+
+import { useRefresh } from "@/context/RefreshContext";
 
 interface Category {
   id: number;
@@ -32,10 +34,16 @@ interface AddImageProps {
   onImageAdded: () => void;
 }
 
+interface ImagePreview {
+  file: File;
+  preview: string;
+  progress: number;
+}
+
 export function AddImage({ onImageAdded }: AddImageProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+   const [image, setImage] = useState<ImagePreview | null>(null);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -57,7 +65,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
 
     const formData = new FormData();
     formData.append("category_id", categoryId);
-    formData.append("image", image);
+    formData.append("image", image.file);
     formData.append("description", description);
 
     try {
@@ -88,6 +96,39 @@ export function AddImage({ onImageAdded }: AddImageProps) {
       setLoading(false);
     }
   };
+
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return ;
+
+    if (image) {
+      URL.revokeObjectURL(image.preview)
+      
+    }
+
+    const newImage :ImagePreview={
+      file,
+      preview:URL.createObjectURL(file),
+      progress:0
+    }
+
+
+    setImage(newImage);
+
+   
+  };
+
+
+  const removeImage = () => {
+
+    if(image){
+
+      URL.revokeObjectURL(image.preview)
+
+    }
+    setImage(null);
+  };
+
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -125,12 +166,7 @@ export function AddImage({ onImageAdded }: AddImageProps) {
           </Select>
 
           {/* Image */}
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files?.[0] || null)}
-            className="mb-2"
-          />
+          
 
           {/* Description */}
           <textarea
@@ -140,7 +176,31 @@ export function AddImage({ onImageAdded }: AddImageProps) {
             className="w-full border rounded-md p-2 text-sm resize-none mb-2"
             rows={3}
           />
-
+<label className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted transition my-3">
+                                <FaUpload className="text-xl mb-2 text-muted-foreground" />
+                                <p className="text-sm font-medium">Upload event image</p>
+                                <p className="text-xs text-muted-foreground">Click to browse </p>
+                                <Input type="file" accept="image/*"  className="hidden" onChange={handleImageChange} />
+                  </label>
+                   {image  && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        
+                          <div  className="relative border rounded-lg overflow-hidden">
+                            <img src={image.preview} alt="preview" className="h-28 w-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeImage()}
+                              className="absolute top-1 right-1 bg-black/70 text-white p-1 rounded"
+                            >
+                              <FaTrash size={10} />
+                            </button>
+                            <div className="h-1 bg-muted">
+                              <div className="h-1 bg-emerald-600 transition-all" style={{ width: `${image.progress}%` }} />
+                            </div>
+                          </div>
+                       
+                      </div>
+                    )}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={loading}>
               Cancel

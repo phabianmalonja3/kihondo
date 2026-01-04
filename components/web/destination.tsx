@@ -27,7 +27,8 @@ const Destination = () => {
    
 
 
-     const fetchImages = async () => {
+ useEffect(() => {
+      const fetchImages = async () => {
       try {
          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destinations`, {
           cache: "no-store", // 
@@ -46,6 +47,7 @@ const Destination = () => {
     };
 
     fetchImages();
+ }, []);
     
       if (loading) {
         return <DestinationSkeleton />

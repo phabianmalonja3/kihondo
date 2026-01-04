@@ -11,6 +11,7 @@ import { SessionProvider } from "next-auth/react"
 import WrapNav from "@/components/web/wrapLayout";
 import { Toaster } from "@/components/ui/sonner";
 import FooterLayout from "@/components/web/footer-layout";
+import { FloatingSocials } from "@/components/web/floating-social";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         {children}
 <FooterLayout />
   <Toaster />
+<FloatingSocials />
       </body>
     </html>
   );

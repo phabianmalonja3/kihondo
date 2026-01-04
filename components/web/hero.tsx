@@ -15,12 +15,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { FaTrash, FaUpload } from "react-icons/fa";
 
+
+interface ImagePreview {
+  file: File;
+  preview: string;
+  progress: number;
+}
 export function HeroDialog({ onSave }: { onSave: () => void }) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+   const [image, setImage] = useState<ImagePreview | null>(null);
+ 
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +43,7 @@ export function HeroDialog({ onSave }: { onSave: () => void }) {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("subtitle", subtitle);
-    formData.append("image", image);
+    formData.append("image", image.file);
 
     try {
       setLoading(true);
@@ -69,6 +77,40 @@ export function HeroDialog({ onSave }: { onSave: () => void }) {
       setLoading(false);
     }
   };
+
+  
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return ;
+
+    if (image) {
+      URL.revokeObjectURL(image.preview)
+      
+    }
+
+    const newImage :ImagePreview={
+      file,
+      preview:URL.createObjectURL(file),
+      progress:0
+    }
+
+
+    setImage(newImage);
+
+   
+  };
+
+
+  const removeImage = () => {
+
+    if(image){
+
+      URL.revokeObjectURL(image.preview)
+
+    }
+    setImage(null);
+  };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -115,16 +157,31 @@ export function HeroDialog({ onSave }: { onSave: () => void }) {
           </div>
 
           {/* Image */}
-          <div className="grid gap-2">
-            <Label htmlFor="hero-image">Hero Image</Label>
-            <Input
-              id="hero-image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
-              required
-            />
-          </div>
+       <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted transition my-3">
+                                       <FaUpload className="text-xl mb-2 text-muted-foreground" />
+                                       <p className="text-sm font-medium">Upload event image</p>
+                                       <p className="text-xs text-muted-foreground">Click to browse </p>
+                                       <Input type="file" accept="image/*"  className="hidden" onChange={handleImageChange} />
+                         </label>
+                          {image  && (
+                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                               
+                                 <div  className="relative border rounded-lg overflow-hidden">
+                                   <img src={image.preview} alt="preview" className="h-28 w-full object-cover" />
+                                   <button
+                                     type="button"
+                                     onClick={() => removeImage()}
+                                     className="absolute top-1 right-1 bg-black/70 text-white p-1 rounded"
+                                   >
+                                     <FaTrash size={10} />
+                                   </button>
+                                   <div className="h-1 bg-muted">
+                                     <div className="h-1 bg-emerald-600 transition-all" style={{ width: `${image.progress}%` }} />
+                                   </div>
+                                 </div>
+                              
+                             </div>
+                           )}
 
           <DialogFooter className="mt-4">
             <DialogClose asChild>

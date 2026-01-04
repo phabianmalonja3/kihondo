@@ -1,27 +1,11 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
-import Link from "next/link";
-import React, { Suspense, useEffect, useState } from "react";
 
-interface Destination {
-  id: string;
-  name: string;
-  location: string;
-  image_url: string;
-}
-
-const destinations: Destination[] = [
-  
-];
 
 
 
 export default function DestinationsPage() {
 
-  const [destinations,setDestinations]= useState<Destination[]>([]);
-  const [loading,setLoading]= useState<boolean>(true);
 useEffect(() => {
 
 
