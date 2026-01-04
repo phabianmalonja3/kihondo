@@ -1,11 +1,26 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "lucide-react";
+import Image from "next/image";
+import { Suspense, useEffect, useState } from "react";
 
+
+interface Destination {
+  id: number;
+  name: string;
+  location: string;
+  description: string;
+  image_url: string;
+  status: string;
+  category?: { name: string };
+}
 
 
 
 export default function DestinationsPage() {
-
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [loading, setLoading] = useState(true);
 useEffect(() => {
 
 
