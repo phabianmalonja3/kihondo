@@ -10,7 +10,7 @@ interface Destination {
   id: number;
   name: string;
   location: string;
-  description: string;
+  descriptions: string;
   image_url: string;
   status: string;
   category?: { name: string };
@@ -36,6 +36,8 @@ export default function DestinationView({ params }: Props) {
         );
         if (!res.ok) throw new Error("Destination not found");
         const json = await res.json();
+
+        console.log(json.destination)
         if (isMounted) setData(json.destination);
       } catch (err) {
         if (isMounted) setError(err instanceof Error ? err.message : "An error occurred");
@@ -105,7 +107,7 @@ export default function DestinationView({ params }: Props) {
           <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-sm border border-zinc-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">About the Destination</h2>
             <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-lg whitespace-pre-line">
-              {data.description}
+              {data.descriptions}
             </div>
           </div>
 

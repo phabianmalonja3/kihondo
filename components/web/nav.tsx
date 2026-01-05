@@ -37,7 +37,7 @@ const Nav = () => {
         },
         {
             path: "Zanzibar",
-            href: "/packages/zanzibar"
+        href: "/packages?package=zanzibar"
             
         },
 

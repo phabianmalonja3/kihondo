@@ -1,13 +1,14 @@
 
 "use client"
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
+
 import Link from "next/link";
 import React, { Suspense, useEffect, useState } from "react";
 import { DeleteDestination } from './delete';
 import { FaEdit, FaEye } from "react-icons/fa";
 import { AddDestination } from "./add-destination";
 import TableSkeleton from "../TableSkeleton";
+import Image from "next/image";
 
 
 interface Destination {

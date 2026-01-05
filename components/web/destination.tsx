@@ -35,6 +35,8 @@ const Destination = () => {
         });
         
         const data = await res.json();
+
+        console.log(data)
       
         setDestinations(data.destinations.data ?? data);
     

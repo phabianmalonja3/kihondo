@@ -7,9 +7,9 @@ const nextConfig = {
   },
   
   experimental: {
-    allowedDevOrigins: ['127.0.0.1:3000', 'localhost:3000']
+    // This allows you to access the dev server via 127.0.0.1 without warnings
+    allowedDevOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
   },
-  
   
   images: {
     remotePatterns: [

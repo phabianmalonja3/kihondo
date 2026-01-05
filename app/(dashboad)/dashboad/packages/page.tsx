@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { da } from "zod/v4/locales";
 import Image from "next/image";
 import { DeletePackage } from "./delete";
+import { Eye, Link } from "lucide-react";
+import ShowPackageModal from "./ShowPackageModal";
 
 
 interface Location{
@@ -108,6 +110,7 @@ export  default  function Packages() {
                 <td className="px-6 py-4">{pk.options.join(" , ")}</td>
                 <td className="px-6 py-4">{pk.location.name}</td>
                 <td className="px-6 py-4">
+<ShowPackageModal pkg={pk} />
                  <DeletePackage id={pk.id} onDelete={()=>setRefresh(prev=>!prev)}  />
                 </td>
               </tr>

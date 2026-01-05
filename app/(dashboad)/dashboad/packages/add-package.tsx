@@ -69,9 +69,7 @@ export function AddPackage({ onAddPackage }: Props) {
   useEffect(() => {
     async function fetchOptions() {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/options`
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/options`,{cache:"no-cache"});
 
         if (!res.ok) throw new Error();
 
@@ -84,9 +82,7 @@ export function AddPackage({ onAddPackage }: Props) {
 
      async function fetchLocations() {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/locations`
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/locations`,{cache:"no-cache"});
 
         if (!res.ok) throw new Error();
 
