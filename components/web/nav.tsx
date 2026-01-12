@@ -102,7 +102,7 @@ const Nav = () => {
 
                         {/* Desktop CTA */}
                         <div className="hidden md:block">
-                            <Link href="/booking" className="bg-emerald-900 text-white px-4 py-2 rounded hover:bg-emerald-700 transition">
+                            <Link href="/packages" className="bg-emerald-900 text-white px-4 py-2 rounded hover:bg-emerald-700 transition">
                                 Book Now
                             </Link>
                         </div>
@@ -121,7 +121,7 @@ const Nav = () => {
                              {links.map((link,index) =>(<Link href={link.href} key={index} className= {`hover:text-emerald-700 font-medium ${pathname === link.href ? ' bg-emerald-800 text-white px-2 hover:text-white py-1 rounded-md ' : " "}`}>{link.path.toString()} {pathname === link.path}</Link>)
                             )}
 
-                            <a href="/booking" className="bg-emerald-700 text-white px-4 py-2 rounded text-center mt-2">Book Now</a>
+                            <a href="/packages" className="bg-emerald-700 text-white px-4 py-2 rounded text-center mt-2">Book Now</a>
                         </div>
                     </div>
                 )}

@@ -41,7 +41,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
 
         {children}
 <FooterLayout />
-  <Toaster />
+<Toaster position="top-center" richColors />
 <FloatingSocials />
       </body>
     </html>
