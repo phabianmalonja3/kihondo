@@ -66,7 +66,7 @@ const Nav = () => {
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-2">
                             <FaEnvelope className=" text-white" />
-                            <span>Email: info@mikumiwildlifesafari.co.tz</span>
+                            <span>Email: info@mikumi.co.tz</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaPhone className=" text-white" />
@@ -90,7 +90,7 @@ const Nav = () => {
                         {/* Logo */}
                         <Link href={"/"} className="flex items-center gap-2">
                             <Logo />
-                            <span className="text-xl font-bold text-emerald-900">Mikumi Wildlife Safari</span>
+                            <span className="text-xl font-bold text-emerald-900">Mikumi</span>
                         </Link>
                         {/* Desktop Links */}
                         <div className="hidden md:flex space-x-6 items-center">

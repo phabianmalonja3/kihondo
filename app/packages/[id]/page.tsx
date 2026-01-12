@@ -135,9 +135,11 @@ setRelated(filtered);
             <p className="text-gray-500 text-sm mb-1">Total Price starting from</p>
             <div className="text-4xl font-bold text-emerald-700 mb-6">${pkg.price}</div>
 
+            <Link href={`/book/${pkg.id}`}>
             <button className="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
               Book This Tour
             </button>
+            </Link>
 
             <p className="text-center text-xs text-gray-400 mt-4 italic">
               * Price depends on group size and season
