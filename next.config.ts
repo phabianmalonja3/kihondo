@@ -6,8 +6,17 @@ const nextConfig = {
     },
   },
   
+  // 1. ADD REWRITES SECTION HERE
+  async rewrites() {
+    return [
+      {
+        source: '/api-proxy/:path*',
+        destination: 'http://188.245.179.190:8000/api/:path*',
+      },
+    ]
+  },
+
   experimental: {
-    // This allows you to access the dev server via 127.0.0.1 without warnings
     allowedDevOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
   },
   
@@ -17,12 +26,10 @@ const nextConfig = {
         protocol: 'http',
         hostname: '188.245.179.190',
         port: '8000',
-        pathname: '/storage/**', // Allows all paths from this host
+        pathname: '/storage/**',
       },
     ],
   },
 };
 
 export default nextConfig;
-
-
