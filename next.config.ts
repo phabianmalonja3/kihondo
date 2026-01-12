@@ -6,12 +6,17 @@ const nextConfig = {
     },
   },
   
-  // 1. ADD REWRITES SECTION HERE
   async rewrites() {
     return [
       {
+        // For API calls
         source: '/api-proxy/:path*',
         destination: 'http://188.245.179.190:8000/api/:path*',
+      },
+      {
+        // For Images/Storage
+        source: '/storage-proxy/:path*',
+        destination: 'http://188.245.179.190:8000/storage/:path*',
       },
     ]
   },
@@ -23,6 +28,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        // Keep this, but you'll likely use relative paths now
         protocol: 'http',
         hostname: '188.245.179.190',
         port: '8000',
