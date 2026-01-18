@@ -134,7 +134,10 @@ const router = useRouter()
                         type="submit"
                         className="w-full rounded-lg bg-emerald-700 py-2.5 text-white font-semibold  hover:bg-emerald-800 transition items-center"
                     >
-                        <div className='h-5 w-5 animate-spin rounded-full border-4 text-white  border-t-transparent text-center mx-auto'></div>
+                       <div className="relative flex h-4 w-4 mx-auto">
+  <div className="absolute h-full w-full animate-ping rounded-full bg-white opacity-75"></div>
+  <div className="absolute h-full w-full animate-ping rounded-full bg-white opacity-50 [animation-delay:0.5s]"></div>
+</div>
                     </button>}
 
                 </form>

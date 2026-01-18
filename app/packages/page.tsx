@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, MapPin, Tag, AlertCircle } from "lucide-react";
+import { Clock, MapPin, Tag, AlertCircle, Moon, Sun } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // --- Interfaces ---
@@ -24,6 +24,8 @@ interface Package {
   image_url: string;
   category?: { name: string };
   active: boolean;
+  days: number;
+  nights: number;
   location: Location; // This is an object
 }
 
@@ -47,10 +49,10 @@ function PackagesList() {
 
         const res = await fetch(fetchUrl);
         if (!res.ok) throw new Error("Network response was not ok");
-        
+
         const data = await res.json();
         const allPackages = data.packages?.data ?? data.packages ?? data;
-        
+
         // Ensure we only show active ones and handle array check
         if (Array.isArray(allPackages)) {
           setPackages(allPackages.filter((p: Package) => p.active));
@@ -117,10 +119,23 @@ function PackagesList() {
                       {/* FIX: Accessing .name property instead of the whole object */}
                       {pkg.location?.name || "Tanzania"}
                     </div>
-                    <div className="flex items-center text-gray-600 text-sm gap-2">
-                      <Clock size={16} className="text-emerald-500" />
-                      {pkg.duration_days} Days
+
+                    <div className="flex items-center gap-3 text-gray-700 text-sm font-semibold bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 w-fit">
+                      {/* Days Part */}
+                      <div className="flex items-center gap-1.5">
+                        <Sun size={16} className="text-amber-500" />
+                        <span>{pkg.days} {pkg.days > 1 ? 'Days' : 'Day'}</span>
+                      </div>
+
+                      <span className="text-gray-300">/</span>
+
+                      {/* Nights Part */}
+                      <div className="flex items-center gap-1.5">
+                        <Moon size={16} className="text-indigo-500" />
+                        <span>{pkg.nights} {pkg.nights > 1 ? 'Nights' : 'Night'}</span>
+                      </div>
                     </div>
+
                   </div>
 
                   <div className="mt-auto pt-4 border-t border-gray-50">
@@ -160,7 +175,7 @@ export default function PackagesPage() {
 function HeroSection() {
   const searchParams = useSearchParams();
   const query = searchParams.get("package");
-  
+
   return (
     <div className="bg-emerald-900 text-white py-20 text-center">
       <h1 className="text-4xl md:text-5xl font-bold capitalize">

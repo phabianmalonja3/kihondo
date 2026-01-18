@@ -31,10 +31,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import { FaPlus, FaTrash, FaUpload } from "react-icons/fa";
 import { toast } from "sonner";
-import { PackageSchema } from "@/lib/schema";
-import { FormControl, FormField } from "@/components/ui/form";
-
-
 
 interface Props {
   onAddPackage: () => void;
@@ -44,6 +40,7 @@ interface Option {
   id: number;
   options: string;
 }
+
 interface Location {
   id: number;
   name: string;
@@ -52,104 +49,100 @@ interface Location {
 interface ImagePreview {
   file: File;
   preview: string;
-  progress: number;
 }
-
 
 export function AddPackage({ onAddPackage }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState<ImagePreview | null>();
+  const [image, setImage] = useState<ImagePreview | null>(null);
   const [options, setOptions] = useState<Option[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
 
-  /* Fetch options */
+  /* Fetch initial data when dialog opens */
   useEffect(() => {
-    async function fetchOptions() {
+    async function fetchData() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/options`,{cache:"no-cache"});
+        const [optRes, locRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/options`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/locations`)
+        ]);
 
-        if (!res.ok) throw new Error();
+        if (!optRes.ok || !locRes.ok) throw new Error();
 
-        const data = await res.json();
-        setOptions(data.options);
-      } catch {
-        toast.error("Failed to fetch options");
+        const optData = await optRes.json();
+        const locData = await locRes.json();
+
+        setOptions(optData.options || []);
+        setLocations(locData.locations || []);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        toast.error("Failed to load options or locations");
       }
     }
+    if (open) fetchData();
+  }, [open]);
 
-     async function fetchLocations() {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/locations`,{cache:"no-cache"});
-
-        if (!res.ok) throw new Error();
-
-        const data = await res.json();
-        setLocations(data.locations);
-      } catch {
-        toast.error("Failed to fetch Locations");
-      }
-    }
-
-
-    fetchOptions();
-    fetchLocations();
-  }, []);
-
-  /* Toggle option */
   const toggleOption = (id: number) => {
     setSelectedOptions((prev) =>
-      prev.includes(id)
-        ? prev.filter((v) => v !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
     );
   };
 
-  /* Submit */
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (image) URL.revokeObjectURL(image.preview);
+
+    setImage({
+      file,
+      preview: URL.createObjectURL(file),
+    });
+  };
+
+  const removeImage = () => {
+    if (image) URL.revokeObjectURL(image.preview);
+    setImage(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
+    if (!selectedLocation) {
+      toast.error("Please select a location");
+      return;
+    }
 
     const formData = new FormData(e.currentTarget);
 
-    const schema = PackageSchema.safeParse(formData)
-
-
-
-
-    if (image) {
-      formData.append("image", image.file);
-    }
-
-
-
-    selectedOptions.forEach((id) =>
+    // Append standard fields managed by state
+    if (image) formData.append("image", image.file);
+    formData.append("location_id", selectedLocation);
+    
+    // Append options as an array
+    selectedOptions.forEach((id) => 
       formData.append("options[]", id.toString())
     );
 
     try {
       setLoading(true);
-
-
-
-
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/packages`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/packages`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!res.ok) throw new Error();
 
-      toast.success("Package added successfully");
+      toast.success("Package added and saved to database");
+      
+      // Cleanup and Close
+      setImage(null);
+      setSelectedOptions([]);
+      setSelectedLocation("");
       onAddPackage();
       setOpen(false);
-    } catch {
+    } catch (err) {
       toast.error("Failed to add package");
     } finally {
       setLoading(false);
@@ -161,159 +154,135 @@ export function AddPackage({ onAddPackage }: Props) {
     .map((o) => o.options)
     .join(", ");
 
-
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (image) {
-      URL.revokeObjectURL(image.preview)
-
-    }
-
-    const newImage: ImagePreview = {
-      file,
-      preview: URL.createObjectURL(file),
-      progress: 0
-    }
-
-
-    setImage(newImage);
-
-
-  };
-
-
-  const removeImage = () => {
-
-    if (image) {
-
-      URL.revokeObjectURL(image.preview)
-
-    }
-    setImage(null);
-  };
-
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="flex items-center gap-2 bg-emerald-900">
+        <Button className="flex items-center gap-2 bg-emerald-900 hover:bg-emerald-800">
           <FaPlus /> Add Package
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="sm:max-w-md">
-        <form onSubmit={handleSubmit}>
+      <AlertDialogContent className="sm:max-w-md max-h-[95vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <AlertDialogHeader>
-            <AlertDialogTitle>Add Package</AlertDialogTitle>
+            <AlertDialogTitle>Create New Travel Package</AlertDialogTitle>
             <AlertDialogDescription>
-              Upload image and package details.
+              Fill in the details. These will be stored in your database to prevent manual re-entry later.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
-          <Input name="name" placeholder="Package name" className="mb-2" />
-          <Input
-            type="number"
-            name="price"
-            placeholder="Price"
-            className="mb-2"
-          />
+          {/* Package Name */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Name</label>
+            <Input name="name" placeholder="e.g. Luxury Paradise Stay" required />
+          </div>
 
-           
-                    {/* Add the width utility to the Select component wrapper if needed, 
-    but the Trigger is the key element */}
-{/* Add name and onValueChange */}
-<Select name="locationId" onValueChange={setSelectedLocation}>
-  <SelectTrigger className="w-full my-2"> 
-    <SelectValue placeholder="Select Locations" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectGroup>
-      <SelectLabel>Locations</SelectLabel>
-      {locations.map((loc) => (
-        <SelectItem key={loc.id} value={loc.id.toString()}>
-          {loc.name}
-        </SelectItem>
-      ))}
-    </SelectGroup>
-  </SelectContent>
-</Select>
+          {/* Price, Days, and Nights Row */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase text-muted-foreground">Price</label>
+              <Input type="number" name="price" placeholder="0.00" required />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase text-muted-foreground">Days</label>
+              <Input type="number" name="days" placeholder="Days" min={0} required />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold uppercase text-muted-foreground">Nights</label>
+              <Input type="number" name="nights" placeholder="Nights" min={0} required />
+            </div>
+          </div>
 
-{/* This hidden input ensures the value is included in FormData */}
-<input type="hidden" name="location_id" value={selectedLocation} />
-           
-            
+          {/* Location Selection */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Location</label>
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose a destination" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Available Destinations</SelectLabel>
+                  {locations.map((loc) => (
+                    <SelectItem key={loc.id} value={loc.id.toString()}>
+                      {loc.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
 
-          {/* Multi-select */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start mb-2"
-              >
-                {selectedNames || "Select options"}
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="w-64 ">
-              <div className="space-y-2 ">
-                {options.map((option) => (
-                  <div
-                    key={option.id}
-                    className="flex items-center gap-2 "
-                  >
-                    <Checkbox
-                      checked={selectedOptions.includes(option.id)}
-                      onCheckedChange={() =>
-                        toggleOption(option.id)
-                      }
-                    />
-                    <span className="text-sm ">{option.options}</span>
-                  </div>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          <Input
-            name="location"
-            placeholder="Location"
-            className="mb-2"
-          />
-
-          <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted transition my-3">
-            <FaUpload className="text-xl mb-2 text-muted-foreground" />
-            <p className="text-sm font-medium">Upload event image</p>
-            <p className="text-xs text-muted-foreground">Click to browse </p>
-            <Input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-          </label>
-          {image && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-
-              <div className="relative border rounded-lg overflow-hidden">
-                <img src={image.preview} alt="preview" className="h-28 w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage()}
-                  className="absolute top-1 right-1 bg-black/70 text-white p-1 rounded"
+          {/* Inclusions / Options */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Inclusions</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  type="button" // Prevents accidental form submission
+                  className="w-full justify-start overflow-hidden text-left font-normal"
                 >
-                  <FaTrash size={10} />
-                </button>
-                <div className="h-1 bg-muted">
-                  <div className="h-1 bg-emerald-600 transition-all" style={{ width: `${image.progress}%` }} />
+                  <span className="truncate">{selectedNames || "Select what's included"}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-64" align="start">
+                <div className="space-y-2 max-h-48 overflow-y-auto p-1">
+                  {options.map((option) => (
+                    <div key={option.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`opt-${option.id}`}
+                        checked={selectedOptions.includes(option.id)}
+                        onCheckedChange={() => toggleOption(option.id)}
+                      />
+                      <label htmlFor={`opt-${option.id}`} className="text-sm cursor-pointer select-none">
+                        {option.options}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </PopoverContent>
+            </Popover>
+          </div>
 
+          {/* Custom Location/Address */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Address Detail</label>
+            <Input name="location" placeholder="Specific resort or street" />
+          </div>
+
+          {/* Image Upload Area */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold uppercase text-muted-foreground">Cover Image</label>
+            <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 cursor-pointer hover:bg-muted/50 transition">
+              <FaUpload className="text-xl mb-1 text-muted-foreground" />
+              <p className="text-xs font-medium">Click to upload image</p>
+              <Input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+            </label>
+          </div>
+
+          {/* Image Preview Window */}
+          {image && (
+            <div className="relative border rounded-lg overflow-hidden h-32 w-full bg-slate-100">
+              <img src={image.preview} alt="preview" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-full shadow-lg hover:bg-red-700 transition"
+              >
+                <FaTrash size={12} />
+              </button>
             </div>
           )}
 
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading}>
-              Cancel
-            </AlertDialogCancel>
-            <Button disabled={loading} color="bg-emerald-700" className="bg-emerald-700 hover:bg-emerald-600 text-white">
-              {loading ? "Saving..." : "Save"}
+          <AlertDialogFooter className="pt-2">
+            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="bg-emerald-700 hover:bg-emerald-600 text-white min-w-[100px]"
+            >
+              {loading ? "Saving..." : "Save Package"}
             </Button>
           </AlertDialogFooter>
         </form>
