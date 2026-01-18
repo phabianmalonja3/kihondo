@@ -41,35 +41,39 @@ const socialLinks = [
 ];
 
 export default function SocialLinks() {
-   return (
-    <div className="fixed right-4 top-1/2 z-50 flex -translate-y-1/2 flex-col gap-3 md:right-6">
-      {socialLinks.map((social) => (
-        <div key={social.name} className="group relative flex items-center">
-          {/* Label that slides out on hover */}
-          <span className="absolute right-full mr-3 whitespace-nowrap rounded-md bg-black/70 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-            {social.name === "WhatsApp" ? "Chat with us" : social.name}
-          </span>
-          
-          {social.priority && (
-            <span className="absolute inset-0 animate-ping rounded-full bg-green-500/20" />
-          )}
-          
-          <Button
-            variant="outline"
-            size="icon"
-            asChild
-            className={cn(
-              "h-11 w-11 rounded-full bg-background/95 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:text-white border-muted",
-              social.color
+ return (
+    <div className="fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 md:left-auto md:right-6 md:translate-x-0">
+      <div className="flex flex-row gap-3 md:flex-col items-center justify-center">
+        {socialLinks.map((social) => (
+          <div key={social.name} className="group relative flex items-center">
+            
+            {/* Label - Hidden on mobile, slides out on desktop hover */}
+            <span className="hidden md:block absolute right-full mr-3 whitespace-nowrap rounded-md bg-emerald-950/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white opacity-0 transition-all duration-300 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0">
+              {social.name === "WhatsApp" ? "Chat with us" : social.name}
+            </span>
+            
+            {/* Priority Ping Effect (WhatsApp) */}
+            {social.priority && (
+              <span className="absolute inset-0 animate-ping rounded-full bg-green-500/40" />
             )}
-          >
-            <a href={social.href} target="_blank" rel="noopener noreferrer">
-              <social.icon className="h-5 w-5" />
-              <span className="sr-only">{social.name}</span>
-            </a>
-          </Button>
-        </div>
-      ))}
+            
+            <Button
+              variant="outline"
+              size="icon"
+              asChild
+              className={cn(
+                "h-12 w-12 rounded-full bg-white shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:text-white border-slate-100 flex items-center justify-center",
+                social.color
+              )}
+            >
+              <a href={social.href} target="_blank" rel="noopener noreferrer">
+                <social.icon className="h-6 w-6" />
+                <span className="sr-only">{social.name}</span>
+              </a>
+            </Button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

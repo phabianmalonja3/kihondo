@@ -1,8 +1,10 @@
 "use client";
 
+import React, { useEffect, useRef } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import Image from "next/image";
-import * as React from "react";
-import Autoplay from "embla-carousel-autoplay";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -10,12 +12,13 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi, // Import the API type
+  type CarouselApi,
 } from "@/components/ui/carousel";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import { toast } from "sonner";
 import Link from 'next/link';
-import { cn } from "@/lib/utils"; // Ensure you have this utility
+import { cn } from "@/lib/utils";
+import gsap from "gsap"; // 1. Import GSAP
 
 interface Event {
   id: string;
@@ -27,28 +30,14 @@ interface Event {
 export default function Explore() {
   const [events, setEvents] = React.useState<Event[]>([]);
   const [loading, setLoading] = React.useState(true);
-  
-  // 1. State for API and tracking current slide
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  
+  // Ref to track if the user is hovering (to pause auto-play)
+  const isHovered = React.useRef(false);
 
-  const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true })
-  );
-
-  // 2. Effect to handle slide selection events
-  React.useEffect(() => {
-    if (!api) return;
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap());
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap());
-    });
-  }, [api]);
-
+  // 2. Fetch Events
   React.useEffect(() => {
     async function fetchEvents() {
       try {
@@ -65,11 +54,50 @@ export default function Explore() {
     fetchEvents();
   }, []);
 
+  // 3. Handle Carousel API & GSAP Auto-sliding
+  React.useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+
+    // GSAP Ticker for Auto-sliding
+    // This acts like a high-performance setInterval
+    const autoScroll = setInterval(() => {
+      if (!isHovered.current) {
+        api.scrollNext();
+      }
+    }, 4000);
+
+    return () => clearInterval(autoScroll);
+  }, [api]);
+
+  // 4. GSAP Animation for Card Entry
+  const containerRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!loading && events.length > 0) {
+      const ctx = gsap.context(() => {
+        gsap.from(".event-card", {
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
+        });
+      }, containerRef);
+      return () => ctx.revert();
+    }
+  }, [loading, events]);
+
   if (loading) return <ExploreSkeleton />;
   if (!events.length) return null;
 
   return (
-    <section className="py-20 px-4 bg-slate-50/50">
+    <section ref={containerRef} className="py-20 px-4 bg-slate-50/50">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center mb-12">
           <h2 className="text-4xl font-bold text-emerald-950 mb-4">
@@ -79,11 +107,10 @@ export default function Explore() {
         </div>
 
         <Carousel
-          setApi={setApi} // 3. Set the API
-          plugins={[plugin.current]}
+          setApi={setApi}
           className="w-full"
-          onMouseEnter={plugin.current.stop}
-          onMouseLeave={plugin.current.reset}
+          onMouseEnter={() => (isHovered.current = true)}
+          onMouseLeave={() => (isHovered.current = false)}
           opts={{
             align: "start",
             loop: true,
@@ -95,7 +122,7 @@ export default function Explore() {
                 key={event.id}
                 className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
               >
-                <div className="h-full transition-transform duration-300 hover:-translate-y-2">
+                <div className="event-card h-full transition-transform duration-300 hover:-translate-y-2">
                   <Link href={`/blog/${event.id}`}>
                     <Card className="overflow-hidden border-none shadow-sm hover:shadow-xl transition-shadow h-full">
                       <div className="relative aspect-[4/3]">
@@ -128,7 +155,6 @@ export default function Explore() {
           </div>
         </Carousel>
 
-        {/* 4. The Indicators (Dots) */}
         <div className="flex justify-center gap-2 mt-8">
           {Array.from({ length: count }).map((_, index) => (
             <button
@@ -150,44 +176,69 @@ export default function Explore() {
 }
 
 
-function ExploreSkeleton() {
+
+ function ExploreSkeleton() {
+  const skeletonRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Create a subtle entrance for the skeleton loader
+      gsap.from(".skeleton-card", {
+        opacity: 0,
+        y: 20,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: "power2.out",
+      });
+    }, skeletonRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="py-20 bg-slate-50/50">
+    <div ref={skeletonRef} className="py-20 bg-slate-50/50">
       <div className="max-w-7xl mx-auto px-4">
+        
         {/* Title & Underline Skeleton */}
         <div className="flex flex-col items-center mb-12">
-          <Skeleton className="h-10 w-64 mb-4" />
-          <Skeleton className="h-1 w-20 rounded-full" />
+          <Skeleton className="h-10 w-64 mb-4 bg-slate-200" />
+          <Skeleton className="h-1 w-20 rounded-full bg-emerald-200" />
         </div>
 
         {/* Carousel Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm p-0">
+            <div 
+              key={i} 
+              className="skeleton-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100"
+            >
               {/* Image area */}
-              <Skeleton className="aspect-[4/3] w-full rounded-none" />
+              <Skeleton className="aspect-[4/3] w-full rounded-none bg-slate-200" />
+              
               {/* Content area */}
-              <div className="p-6 space-y-3">
-                <Skeleton className="h-6 w-3/4" />
+              <div className="p-6 space-y-4">
+                {/* Title line */}
+                <Skeleton className="h-6 w-3/4 bg-slate-200" />
+                
+                {/* Description lines */}
                 <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-full bg-slate-100" />
+                  <Skeleton className="h-3 w-full bg-slate-100" />
+                  <Skeleton className="h-3 w-2/3 bg-slate-100" />
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Indicators Skeleton (the dots) */}
-        <div className="flex justify-center gap-2 mt-8">
-          <Skeleton className="h-2 w-6 rounded-full" />
-          <Skeleton className="h-2 w-2 rounded-full" />
-          <Skeleton className="h-2 w-2 rounded-full" />
-          <Skeleton className="h-2 w-2 rounded-full" />
+        {/* Indicators Skeleton (the dots at the bottom) */}
+        <div className="flex justify-center gap-2 mt-12">
+          <Skeleton className="h-2 w-8 rounded-full bg-emerald-200" />
+          <Skeleton className="h-2 w-2 rounded-full bg-slate-200" />
+          <Skeleton className="h-2 w-2 rounded-full bg-slate-200" />
+          <Skeleton className="h-2 w-2 rounded-full bg-slate-200" />
         </div>
       </div>
     </div>
   );
 }
-// ... ExploreSkeleton stays the same
