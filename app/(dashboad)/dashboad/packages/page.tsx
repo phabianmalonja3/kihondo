@@ -89,7 +89,7 @@ export  default  function Packages() {
             </tr>
           </thead>
           <tbody>
-           <Suspense fallback={<p>Loading ..</p>}>
+           {/* <Suspense fallback={<p>Loading ..</p>}> */}
              {packages?.map((pk) => (
               <tr
                 key={pk.id}
@@ -115,7 +115,7 @@ export  default  function Packages() {
                 </td>
               </tr>
             ))}
-           </Suspense>
+           {/* </Suspense> */}
           </tbody>
         </table>
       </div>
