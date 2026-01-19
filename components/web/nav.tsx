@@ -100,7 +100,7 @@ const Nav = () => {
         <div className="max-w-7xl mx-auto flex justify-between px-6 items-center">
           <div className="flex gap-4 md:gap-6 items-center opacity-90">
             <span className="flex items-center gap-2 hover:text-emerald-400 cursor-pointer">
-              <FaEnvelope className="text-emerald-400" /> info@mikumisafari.co.tz
+              <FaEnvelope className="text-emerald-400" /> info@mikumisafari.co.tzne
             </span>
             <span className="hidden sm:flex items-center gap-2 border-l border-emerald-800/50 pl-4">
               <FaPhone className="text-emerald-400" /> +255 746 560 832

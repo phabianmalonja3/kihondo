@@ -2,21 +2,18 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-
-  // Logging (optional)
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
-  },
-
   images: {
-    // Allow images served through your domain via NGINX
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'mikumisafari.co.tz',
-        port: '', // leave blank for default HTTPS port 443
+        pathname: '/storage/**',
+      },
+      // ADD THIS: Allow the backend IP specifically
+      {
+        protocol: 'http',
+        hostname: '188.245.179.190',
+        port: '8000',
         pathname: '/storage/**',
       },
     ],
