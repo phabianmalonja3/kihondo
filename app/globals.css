@@ -10,6 +10,11 @@
   border-radius: 0.5rem;
 }
 
+/* app/globals.css */
+
+.font-brittany {
+  font-family: var(--font-brittany), cursive;
+}
 
 @theme inline {
   --color-background: var(--background);

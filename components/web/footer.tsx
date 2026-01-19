@@ -69,7 +69,7 @@ export default function Footer() {
               <FaPhoneAlt className="text-yellow-400" /> +255 (0)746 560 832
             </li>
             <li className="flex gap-3 items-center">
-              <FaEnvelope className="text-yellow-400" /> info@mikumiwildlifesafari.co.tz
+              <FaEnvelope className="text-yellow-400" /> info@mikumisafari.co.tz
             </li>
           </ul>
 
