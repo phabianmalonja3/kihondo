@@ -5,11 +5,15 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
+        protocol: 'http', // Allowed because your error log shows http
         hostname: 'mikumisafari.co.tz',
         pathname: '/storage/**',
       },
-      // ADD THIS: Allow the backend IP specifically
+      {
+        protocol: 'https', // Future-proofing for when SSL is forced
+        hostname: 'mikumisafari.co.tz',
+        pathname: '/storage/**',
+      },
       {
         protocol: 'http',
         hostname: '188.245.179.190',

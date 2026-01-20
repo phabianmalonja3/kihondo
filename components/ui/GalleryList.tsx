@@ -37,7 +37,7 @@ export default function GalleryList({data}:{data:ImageItem[]}) {
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Header Section */}
       <div className="bg-emerald-900 text-white py-20 text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Gallery</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight font-brittany text-white" >Gallery</h1>
         <p className="mt-4 text-emerald-100 max-w-2xl mx-auto text-lg">
           A visual journey through the breathtaking landscapes and vibrant culture of Tanzania.
         </p>

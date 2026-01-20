@@ -43,7 +43,7 @@ export default function Event() {
     <main className="bg-zinc-50 dark:bg-black min-h-screen font-sans">
       {/* HERO BANNER - Kept outside loading for better UX */}
       <div className="bg-emerald-900 text-white py-16 text-center">
-        <h1 className="text-4xl font-bold">Tours & Safaris</h1>
+        <h1 className="text-4xl font-bold font-brittany text-white">Tours & Safaris</h1>
         <p className="mt-3 text-gray-200">
           Get in touch with us to plan your next unforgettable adventure.
         </p>

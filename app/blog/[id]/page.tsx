@@ -68,12 +68,12 @@ async function RelatedEventsList({ categoryId, currentId }: { categoryId: string
               className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
             {item.category && (
-              <div className="absolute top-4 left-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-emerald-600">
+              <div className="absolute top-4 left-4 font-brittany text-white  bg-white/90 dark:bg-zinc-900/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-emerald-600">
                 {item.category.name}
               </div>
             )}
           </div>
-          <h3 className="font-bold text-xl text-zinc-900 dark:text-white group-hover:text-emerald-500 transition-colors">
+          <h3 className="font-bold text-xl font-brittany text-white text-zinc-900 dark:text-white group-hover:text-emerald-500 transition-colors">
             {item.title}
           </h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-3 leading-relaxed">
@@ -118,17 +118,17 @@ export default async function EventDetailPage({ params }: Props) {
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           {event.category && (
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-4">
+            <span className="inline-flex font-brittany text-white items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-4">
               <FaTag className="size-2" /> {event.category.name}
             </span>
           )}
 
-          <h1 className="text-white text-4xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+          <h1 className=" text-4xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight font-brittany text-white">
             {event.title}
           </h1>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-emerald-100/90 font-medium bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-white/10 inline-flex">
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 font-brittany text-white">
               <FaMapMarkerAlt className="text-emerald-400" /> {event.location}
             </span>
             <span className="hidden md:block text-white/20">|</span>

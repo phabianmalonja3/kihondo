@@ -50,7 +50,7 @@ export default function ContactClient() {
     <>
    
       <div className="bg-emerald-900 text-white py-16 text-center">
-                <h1 className="text-4xl font-bold">Contact Us</h1>
+                <h1 className="text-4xl font-bold font-brittany" >Contact Us</h1>
                 <p className="mt-3 text-gray-200">
                     Get in touch with us to plan your next unforgettable adventure.
                 </p>
