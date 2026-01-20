@@ -4,20 +4,16 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: [
+      // Frontend images (optional if stored on frontend)
       {
-        protocol: 'http', // Allowed because your error log shows http
+        protocol: 'https',
         hostname: 'mikumisafari.co.tz',
         pathname: '/storage/**',
       },
+      // Backend API images
       {
-        protocol: 'https', // Future-proofing for when SSL is forced
-        hostname: 'mikumisafari.co.tz',
-        pathname: '/storage/**',
-      },
-      {
-        protocol: 'http',
-        hostname: '188.245.179.190',
-        port: '8000',
+        protocol: 'https', // SSL for api
+        hostname: 'api.mikumisafari.co.tz',
         pathname: '/storage/**',
       },
     ],
