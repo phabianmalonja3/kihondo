@@ -82,7 +82,7 @@ export default function ContactClient() {
           <div className="space-y-6">
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-2">Contact Information</h3>
-              <p>Email: info@mikumiwildlifesafari.co.tz</p>
+              <p>Email: info@mikumisafari.co.tz</p>
               <p>Phone: +255 (0)746 560 832</p>
               <p>Address: Mikumi, Morogoro</p>
             </div>

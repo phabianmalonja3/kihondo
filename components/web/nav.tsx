@@ -10,7 +10,8 @@ import {
   FaChevronDown,
   FaTicketAlt,
   FaArrowRight,
-  FaMapMarkerAlt
+  FaMapMarkerAlt,
+  FaBars
 } from "react-icons/fa";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,7 +36,7 @@ interface Location {
 
 const Nav = () => {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
@@ -43,18 +44,21 @@ const Nav = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Close menus on navigation
   useEffect(() => {
     setOpen(false);
     setShowSearch(false);
     setActiveSubmenu(null);
   }, [pathname]);
 
+  // Focus search input
   useEffect(() => {
     if (showSearch) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
     }
   }, [showSearch]);
 
+  // Fetch locations from API
   useEffect(() => {
     async function fetchLocations() {
       try {
@@ -76,7 +80,8 @@ const Nav = () => {
 
   const searchResults = searchQuery
     ? allPackages.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.id.toLowerCase().includes(searchQuery.toLowerCase()) // Added ID search for your vouchers
       )
     : [];
 
@@ -100,41 +105,36 @@ const Nav = () => {
         <div className="max-w-7xl mx-auto flex justify-between px-6 items-center">
           <div className="flex gap-4 md:gap-6 items-center opacity-90">
             <span className="flex items-center gap-2 hover:text-emerald-400 cursor-pointer">
-              <FaEnvelope className="text-emerald-400" /> info@mikumisafari.co.tzne
+              <FaEnvelope className="text-emerald-400" /> info@mikumisafari.co.tz
             </span>
             <span className="hidden sm:flex items-center gap-2 border-l border-emerald-800/50 pl-4">
               <FaPhone className="text-emerald-400" /> +255 746 560 832
             </span>
           </div>
-          <div className="max-w-7xl mx-auto flex justify-between px-6 items-center">
-  <div className="flex gap-4 md:gap-6 items-center opacity-90">
-    {/* Contact info... */}
-  </div>
-  
-  {/* WRAP THE TRIGGER HERE */}
-  <BookingStatusModal>
-    <button className="flex items-center gap-2 bg-emerald-900/50 px-3 py-1 rounded-full hover:bg-emerald-800 transition-colors">
-      <FaTicketAlt className="text-emerald-400" /> 
-      <span className="font-bold uppercase tracking-widest text-[10px]">My Booking</span>
-    </button>
-  </BookingStatusModal>
-</div>
+          
+          <BookingStatusModal>
+            <button className="flex items-center gap-2 bg-emerald-900/50 px-3 py-1 rounded-full hover:bg-emerald-800 transition-colors">
+              <FaTicketAlt className="text-emerald-400" /> 
+              <span className="font-bold uppercase tracking-widest text-[10px]">My Booking</span>
+            </button>
+          </BookingStatusModal>
         </div>
       </div>
 
       {/* --- MAIN NAV --- */}
       <nav className="bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-         <Link href="/" className="flex items-center gap-2 group">
-  <Logo className="group-hover:rotate-12 transition-transform duration-500" />
-  <span className="text-4xl font-normal text-emerald-950  lowercase tracking-normal -mt-1" style={{ 
-      fontFamily: 'var(--font-brittany), cursive',
-      WebkitTextStroke: '0.5px #022c22', // Adds a tiny bit of "weight" using the emerald-950 color
-      lineHeight: '1' 
-    }}>
-    Mikumi Safari
-  </span>
-</Link>
+          <Link href="/" className="flex items-center gap-2 group">
+            <Logo className="group-hover:rotate-12 transition-transform duration-500" />
+            <span className="text-4xl font-normal text-emerald-950 lowercase tracking-normal -mt-1" style={{ 
+                fontFamily: 'var(--font-brittany), cursive',
+                WebkitTextStroke: '0.5px #022c22',
+                lineHeight: '1' 
+              }}>
+              Mikumi Safari
+            </span>
+          </Link>
+
           {/* DESKTOP MENU */}
           <div className="hidden lg:flex items-center space-x-1">
             {links.map((link) => (
@@ -208,26 +208,50 @@ const Nav = () => {
             <Link href="/packages" className="hidden md:block bg-emerald-900 text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-emerald-800">
               Book Now
             </Link>
-            <button className="lg:hidden text-2xl text-emerald-950 ml-2" onClick={() => setOpen(!open)}>
-              {open ? <FaTimes /> : "☰"}
+            <button className="lg:hidden text-2xl text-emerald-950 ml-2" onClick={() => setOpen(true)}>
+              <FaBars />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* --- MOBILE MENU --- */}
-      <div className={cn("fixed inset-0 bg-white z-[90] transition-all duration-500 lg:hidden flex flex-col pt-24", open ? "translate-x-0" : "translate-x-full")}>
+      {/* --- MOBILE MENU (FIXED) --- */}
+      <div className={cn(
+        "fixed inset-0 bg-white z-[100] transition-all duration-500 lg:hidden flex flex-col", 
+        open ? "translate-x-0" : "translate-x-full"
+      )}>
+        <div className="flex justify-between items-center p-6 border-b">
+           <Logo className="scale-75" />
+           <button onClick={() => setOpen(false)} className="text-xl text-emerald-950">
+             <FaTimes />
+           </button>
+        </div>
+
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {links.map((link) => (
             <div key={link.path} className="border-b border-slate-50 pb-4">
               <div 
                 className="flex justify-between items-center py-2"
-                onClick={() => link.locations ? setActiveSubmenu(activeSubmenu === link.path ? null : link.path) : setOpen(false)}
+                onClick={() => {
+                  if (link.locations) {
+                    setActiveSubmenu(activeSubmenu === link.path ? null : link.path);
+                  } else {
+                    setOpen(false);
+                  }
+                }}
               >
-                <span className="font-black text-slate-800 uppercase text-2xl tracking-tighter">
-                  {link.locations ? link.path : <Link href={link.href}>{link.path}</Link>}
-                </span>
-                {link.locations && <FaChevronDown className={cn("transition-transform", activeSubmenu === link.path && "rotate-180")} />}
+                {link.locations ? (
+                  <span className="font-black text-slate-800 uppercase text-2xl tracking-tighter">
+                    {link.path}
+                  </span>
+                ) : (
+                  <Link href={link.href} className="font-black text-slate-800 uppercase text-2xl tracking-tighter">
+                    {link.path}
+                  </Link>
+                )}
+                {link.locations && (
+                  <FaChevronDown className={cn("transition-transform", activeSubmenu === link.path && "rotate-180")} />
+                )}
               </div>
 
               {link.locations && activeSubmenu === link.path && (
@@ -236,9 +260,10 @@ const Nav = () => {
                     <div key={loc.id}>
                       <button 
                         onClick={() => setActiveLocation(activeLocation === loc.id ? null : loc.id)}
-                        className="flex items-center gap-2 font-bold text-emerald-800 uppercase text-sm"
+                        className="flex items-center justify-between w-full font-bold text-emerald-800 uppercase text-sm"
                       >
-                        <FaMapMarkerAlt size={10} /> {loc.name}
+                        <span className="flex items-center gap-2"><FaMapMarkerAlt size={10} /> {loc.name}</span>
+                        <FaChevronDown className={cn("text-[10px] transition-transform", activeLocation === loc.id && "rotate-180")} />
                       </button>
                       
                       {activeLocation === loc.id && (
@@ -263,19 +288,25 @@ const Nav = () => {
             </div>
           ))}
         </div>
+        
+        <div className="p-6">
+           <Link href="/packages" onClick={() => setOpen(false)} className="block w-full text-center bg-emerald-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest">
+              Book Your Safari
+           </Link>
+        </div>
       </div>
 
-      {/* --- SEARCH OVERLAY (RESTORED) --- */}
+      {/* --- SEARCH OVERLAY --- */}
       {showSearch && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-6">
-          <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-xl animate-in fade-in" onClick={() => setShowSearch(false)} />
-          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in slide-in-from-top-10">
+        <div className="fixed inset-0 z-[110] flex items-start justify-center pt-20 px-6">
+          <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-xl" onClick={() => setShowSearch(false)} />
+          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div className="p-6 border-b flex items-center gap-4">
               <FaSearch className="text-slate-400" />
               <input 
                 ref={searchInputRef} 
                 type="text" 
-                placeholder="Where do you want to go?" 
+                placeholder="Search packages or Voucher IDs..." 
                 className="flex-1 outline-none text-lg font-medium" 
                 value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)} 
@@ -290,11 +321,14 @@ const Nav = () => {
                       <span className="text-[10px] font-black text-emerald-600 uppercase block">{pkg.locationName}</span>
                       <span className="font-bold text-slate-800">{pkg.name}</span>
                     </div>
-                    <span className="font-black text-emerald-900">${pkg.price}</span>
+                    <div className="text-right">
+                      <span className="font-black text-emerald-900 block">${pkg.price}</span>
+                      <span className="text-[9px] text-slate-400 uppercase">ID: {pkg.id}</span>
+                    </div>
                   </Link>
                 ))
               ) : (
-                <p className="text-center py-10 text-slate-400">{searchQuery === "" ? "Type to search..." : "No results found."}</p>
+                <p className="text-center py-10 text-slate-400">{searchQuery === "" ? "Type to search by name or ID..." : "No results found."}</p>
               )}
             </div>
           </div>

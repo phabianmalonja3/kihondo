@@ -94,7 +94,7 @@ export default function Explore() {
               </h2>
             </div>
             <p className="text-slate-500 max-w-sm text-sm leading-relaxed italic border-l-2 border-emerald-100 pl-6 hidden md:block">
-              "Your journey through the cradle of mankind begins with stories that last a lifetime."
+              {"Your journey through the cradle of mankind begins with stories that last a lifetime."}
             </p>
           </div>
 
@@ -116,6 +116,8 @@ export default function Explore() {
                       <div className="event-card relative h-[500px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl bg-slate-950 transition-all duration-500">
 
                         <div className="absolute inset-0 z-0">
+
+                          
                           <Image
                               src={(event?.images?.length > 0) ? event.images[0] : "/placeholder.jpg"}
                               alt={event.title}
@@ -124,6 +126,8 @@ export default function Explore() {
                               priority={index < 2}
                               className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
                           />
+
+                          {event.images[0]}
                           {/* Fixed Gradient: Stronger at bottom, darker overall */}
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/30 to-transparent" />
                         </div>

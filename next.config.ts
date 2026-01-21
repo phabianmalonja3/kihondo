@@ -4,12 +4,7 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: [
-      // Frontend images (optional if stored on frontend)
-      {
-        protocol: 'https',
-        hostname: 'mikumisafari.co.tz',
-        pathname: '/storage/**',
-      },
+      
       // Backend API images
       {
         protocol: 'https', // SSL for api
