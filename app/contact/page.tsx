@@ -6,6 +6,12 @@ import ContactClient from "./contact-client";
 export const metadata: Metadata = {
   title: "Contact Us | Mikumi Safari's",
   description: "Have questions about our Tanzania safari packages? Get in touch with the Mikumi Safari's team for bookings, travel advice, and custom tours.",
+   keywords: [
+    "Mikumi National Park safari",
+    "Tanzania safari tours",
+    "Wildlife safari Tanzania",
+    "Safari packages Mikumi"
+  ],
   openGraph: {
     title: "Contact Mikumi Safari's",
     description: "Connect with our safari experts today.",
